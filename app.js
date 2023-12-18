@@ -6,12 +6,25 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
+const helmet = require('helmet');
+const compression = require('compression');
+
+const authRoutes = require('./routes/auth');
+const adminRoutes = require('./routes/admin');
+const userRoutes = require('./routes/user');
+const badgeRoutes = require('./routes/badge');
 
 const app = express();
 const store = new MongoDBStore({
     uri: mongoURI,
     collection: 'sessions'
 });
+
+app.set('view engine', 'ejs');
+app.set('views', 'views');
+
+app.use(helmet());
+app.use(compression());
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -21,6 +34,18 @@ app.use(session({
     saveUninitialized: false,
     store: store
 }));
+
+app.use('/auth', authRoutes);
+app.use('/admin', adminRoutes);
+app.use('/user', userRoutes);
+app.use('/badge', badgeRoutes);
+
+app.get('**', (req, res, next)=> {res.sendFile(path.join(__dirname, 'public', 'index.html'))});
+
+app.use((error, req, res, next) => {
+    console.log(error);
+    res.status(404).json(error);
+});
 
 mongoose.connect(mongoURI)
     .then(()=> {

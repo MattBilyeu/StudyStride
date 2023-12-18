@@ -19,14 +19,41 @@ const userSchema = new Schema({
         type: Boolean,
         required: true
     },
-    topics: {
-        type: Array,
+    times: {
+        type: [{
+            topic: {type: SVGAnimatedBooleantring, required: true},
+            totalTime: {type: Number, required: true}
+        }],
+        default: [],
+        required: false
+    },
+    activeSession: {
+        type: {
+            topic: {type: String, required: true},
+            start: {type: Date, required: true}
+        },
+        required: false
+    },
+    milestones: {
+        type: [{
+            type: String,
+            required: false
+        }],
+        default: []
+    },
+    userActiveUntil: {
+        type: Date,
         required: true
     },
-    badges: {
-        type: Number,
+    badges: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Badge',
+        required: false
+    }],
+    banned: [{
+        type: Boolean,
         required: true
-    },
+    }],
     resetToken: {
         type: String,
         required: false
