@@ -17,7 +17,7 @@ const badgeSchema = new Schema({
         required: true
     },
     dateEarned: {
-        type: Date,
+        type: String,
         required: true
     }
 })

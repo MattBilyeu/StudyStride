@@ -6,6 +6,14 @@ const { sendOne } = require('../util/emailer');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 
+function formatDate(date) {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+}
+
 exports.createUser = (req, res, next) => {
     const name = req.body.name;
     const email = req.body.email;
@@ -195,19 +203,158 @@ exports.updateMilestones = (req, res, next) => {
 }
 
 exports.createTopic = (req, res, next) => {
-    
+    const title = req.body.title;
+    const userId = req.body.userId;
+    User.findById(userId)
+        .then(user => {
+            if (!user) {
+                return res.status(404).json({message: 'User not found.'})
+            } else {
+                const newTopic = {topic: title, totalTime: 0};
+                user.times.push(newTopic);
+                user.save()
+                    .then(updatedUser => {
+                        return res.status(201).json({message: 'New topic created.', user: updatedUser})
+                    })
+                    .catch(err => {
+                        const error = new Error(err);
+                        error.status(500);
+                        next(error)
+                    })
+            }
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.status(500);
+            next(error)
+        })
 }
 
 exports.startSession = (req, res, next) => {
-    
+    const startTime = new Date.now();
+    const activeSession = {
+        topic: req.body.topic,
+        start: startTime
+    };
+    User.findById(req.body.userId)
+        .then(user => {
+            if (user.activeSession) {
+                return res.status(422).json({messsage: 'A session is already active.'})
+            } else {
+                user.activeSession = activeSession;
+                user.save()
+                    .then(updatedUser => {
+                        return res.status(201).json({message: 'Session started.', user: updatedUser})
+                    })
+                    .catch(err => {
+                        const error = new Error(err);
+                        error.status(500);
+                        next(error)
+                    })
+            }
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.status(500);
+            next(error)
+        })
 }
 
 exports.endSession = (req, res, next) => {
     //Check if badge earned
+    let user;
+    User.findById(req.body.userId)
+        .then(foundUser => {
+            if (!foundUser.activeSession) {
+                return res.status(404).json({message: 'An active session was not found'})
+            } else {
+                user = foundUser;
+                const stopTime = new Date.now();
+                const duration = (stopTime - user.activeSession.start)/(1000 * 60);
+                user.activeSession = null;
+                const index = user.times.findIndex(timeObj => timeObj.topic === user.activeSession.topic);
+                if (index !== -1) {
+                    user.times[index].totalTime += duration
+                };
+                const totalStudyTime = (user.times.reduce((total, timeObj) => {
+                    return total + timeObj.totalTime
+                }, 0))/60;
+                if (Math.floor(totalStudyTime) > (user.badges.length * 10)) {
+                    // Add a badge and return
+                    const newBadge = new Badge({
+                        owner: user._id,
+                        ownerName: user.name,
+                        text: `${user.name} has earned a new badge!  That's another 10 hours spent studying.  Great work ${user.name}!  What dedication!`,
+                        dateEarned: formatDate(new Date.now())
+                    });
+                    newBadge.save()
+                        .then(badge => {
+                            user.badges.push(badge._id);
+                            user.save()
+                                .then(updatedUser => {
+                                    return res.status(201).json({message: `Congratulations!  You've earned a new badge!`, user: updatedUser, badge: badge._id})
+                                })
+                                .catch(err => {
+                                    const error = new Error(err);
+                                    error.status(500);
+                                    next(error)
+                                })
+                        })
+                        .catch(err => {
+                            const error = new Error(err);
+                            error.status(500);
+                            next(error)
+                        })
+                } else {
+                    user.save()
+                        .then(updatedUser => {
+                            return res.status(200).json({message: 'Session ended.'})
+                        })
+                        .catch(err => {
+                            const error = new Error(err);
+                            error.status(500);
+                            next(error)
+                        })
+                }
+            }
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.status(500);
+            next(error)
+        })
 }
 
 exports.seedTime = (req, res, next) => {
-    
+    const seedTime = req.body.seedTime;
+    const seedTopic = req.body.seedTopic;
+    User.findById(req.body.userId)
+        .then(user => {
+            if (!user) {
+                return res.status(404).json({message: 'User not found.'})
+            } else {
+                const index = user.times.findIndex(time => time.topic === seedTopic);
+                if (index !== -1) {
+                    return res.status(404).json({message: `${seedTopic} was not found.`})
+                } else {
+                    user.times[index].totalTime += seedTime;
+                    user.save()
+                        .then(updatedUser => {
+                            return res.status(200).json({message: 'Time seeded.', user: updatedUser})
+                        })
+                        .catch(err => {
+                            const error = new Error(err);
+                            error.status(500);
+                            next(error)
+                        })
+                }
+            }
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.status(500);
+            next(error)
+        })
 }
 
 exports.toggleReceiveEmails = (req, res, next) => {

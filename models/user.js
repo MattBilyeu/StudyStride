@@ -21,7 +21,7 @@ const userSchema = new Schema({
     },
     times: {
         type: [{
-            topic: {type: SVGAnimatedBooleantring, required: true},
+            topic: {type: String, required: true},
             totalTime: {type: Number, required: true}
         }],
         default: [],
