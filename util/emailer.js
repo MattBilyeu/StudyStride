@@ -39,7 +39,7 @@ const sendOne = function(email, subject, body) {
     });
 
     const info = {
-        from: 'no-reply@efficient-comms.com',
+        from: 'no-reply@studystride.com',
         to: email,
         subject: subject,
         html: body

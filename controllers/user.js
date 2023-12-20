@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const Badge = require('../models/badge');
+const Stats = require('../models/stats');
 
 const { sendOne } = require('../util/emailer');
 
@@ -12,6 +13,28 @@ function formatDate(date) {
     const year = date.getFullYear();
 
     return `${day}/${month}/${year}`;
+}
+
+function resolveMilestones(oldArray, newArray) {
+    let newMilestones = 0;
+    for (let i = 0; i < newArray.length; i++) {
+        const found = oldArray.find(item => item === newArray[i]);
+        if (found) {
+            newMilestones += 1
+        }
+    };
+    if (newMilestones !== 0) {
+        Stats.findOne()
+            .then(stats => {
+                stats.milestonesCreated += newMilestones;
+                return stats.save()
+            })
+            .catch(err => {
+                const error = new Error(err);
+                error.status(500);
+                next(error)
+            })
+    }
 }
 
 exports.createUser = (req, res, next) => {
@@ -27,7 +50,7 @@ exports.createUser = (req, res, next) => {
                 foundUser = user;
                 bcrypt.hash(password, 12)
                     .then(hashedPassword => {
-                        const futureTimeStamp = Date.now() + (30 * 24 * 60 * 60 * 1000);
+                        const futureTimeStamp = Date() + (30 * 24 * 60 * 60 * 1000);
                         const futureDate = new Date(futureTimeStamp);
                         const newUser = new User({
                             name: name,
@@ -185,14 +208,24 @@ exports.updatePassword = (req, res, next) => {
 }
 
 exports.updateMilestones = (req, res, next) => {
-    const updateData = {milestones: req.body.milestones};
+    const newMilestones = req.body.milestones;
     const userId = req.body.userId;
-    User.findByIdAndUpdate(userId, updateData, {new: true})
-        .then(updatedUser => {
-            if (!updatedUser) {
+    User.findById(userId)
+        .then(user => {
+            if (!user) {
                 return res.status(404).json({message: 'User not found.'})
             } else {
-                return res.status(200).json({message: 'Milestones updated.', user: updatedUser})
+                resolveMilestones(user.milestones, newMilestones);
+                user.milestones = newMilestones;
+                user.save()
+                    .then(updatedUser => {
+                        return res.status(200).json({message: 'Milestones updated.', user: updatedUser})
+                    })
+                    .catch(err => {
+                        const error = new Error(err);
+                        error.status(500);
+                        next(error)
+                    })
             }
         })
         .catch(err => {
@@ -231,7 +264,7 @@ exports.createTopic = (req, res, next) => {
 }
 
 exports.startSession = (req, res, next) => {
-    const startTime = new Date.now();
+    const startTime = new Date();
     const activeSession = {
         topic: req.body.topic,
         start: startTime
@@ -244,7 +277,19 @@ exports.startSession = (req, res, next) => {
                 user.activeSession = activeSession;
                 user.save()
                     .then(updatedUser => {
-                        return res.status(201).json({message: 'Session started.', user: updatedUser})
+                        res.status(201).json({message: 'Session started.', user: updatedUser})
+                    })
+                    .then(result => {
+                        Stats.findOne()
+                            .then(stats => {
+                                stats.totalTimeStamps += 1;
+                                stats.save();
+                            })
+                            .catch(err => {
+                                const error = new Error(err);
+                                error.status(500);
+                                next(error)
+                            })
                     })
                     .catch(err => {
                         const error = new Error(err);
@@ -261,16 +306,17 @@ exports.startSession = (req, res, next) => {
 }
 
 exports.endSession = (req, res, next) => {
-    //Check if badge earned
     let user;
+    let dur;
     User.findById(req.body.userId)
         .then(foundUser => {
             if (!foundUser.activeSession) {
                 return res.status(404).json({message: 'An active session was not found'})
             } else {
                 user = foundUser;
-                const stopTime = new Date.now();
+                const stopTime = new Date();
                 const duration = (stopTime - user.activeSession.start)/(1000 * 60);
+                dur = duration;
                 user.activeSession = null;
                 const index = user.times.findIndex(timeObj => timeObj.topic === user.activeSession.topic);
                 if (index !== -1) {
@@ -280,12 +326,11 @@ exports.endSession = (req, res, next) => {
                     return total + timeObj.totalTime
                 }, 0))/60;
                 if (Math.floor(totalStudyTime) > (user.badges.length * 10)) {
-                    // Add a badge and return
                     const newBadge = new Badge({
                         owner: user._id,
                         ownerName: user.name,
                         text: `${user.name} has earned a new badge!  That's another 10 hours spent studying.  Great work ${user.name}!  What dedication!`,
-                        dateEarned: formatDate(new Date.now())
+                        dateEarned: formatDate(new Date())
                     });
                     newBadge.save()
                         .then(badge => {
@@ -315,7 +360,17 @@ exports.endSession = (req, res, next) => {
                             error.status(500);
                             next(error)
                         })
-                }
+                };
+                Stats.findOne()
+                    .then(stats => {
+                        stats.totalStudyTime += dur;
+                        stats.save()
+                    })
+                    .catch(err => {
+                        const error = new Error(err);
+                        error.status(500);
+                        next(error)
+                    })
             }
         })
         .catch(err => {
@@ -358,11 +413,54 @@ exports.seedTime = (req, res, next) => {
 }
 
 exports.toggleReceiveEmails = (req, res, next) => {
-    
+    User.findById(req.body.userId)
+        .then(user => {
+            if (!user) {
+                return res.status(404).json({message: 'User not found.'})
+            } else {
+                user.receivesEmails = !user.receivesEmails;
+                user.save()
+                    .then(updatedUser => {
+                        return res.status(200).json({message: 'User updated.', user: updatedUser})
+                    })
+                    .catch(err => {
+                        const error = new Error(err);
+                        error.status(500);
+                        next(error)
+                    })
+            }
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.status(500);
+            next(error)
+        })
 }
 
 exports.deleteUser = (req, res, next) => {
-    
+    User.findByIdAndDelete(req.body.userId)
+        .then(deletedUser => {
+            if (!deletedUser) {
+                return res.status(404).json({message: 'User not found.'})
+            } else {
+                return res.status(200).json({message: 'User deleted.'})
+            }
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.status(500);
+            next(error)
+        })
+}
+
+exports.getStatsObject = (req, res, next) => {
+    Stats.findOne()
+        .then(statsObj => res.status(200).json({stats: statsObj}))
+        .catch(err => {
+            const error = new Error(err);
+            error.status(500);
+            next(error)
+        })
 }
 
 exports.renderBadge = (req, res, next) => {

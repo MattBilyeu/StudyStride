@@ -1,6 +1,8 @@
 const mongoURI = require('./util/protected').mongoURI;
 const path = require('path');
 
+const stats = require('./models/stats');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -46,6 +48,16 @@ app.use((error, req, res, next) => {
     console.log(error);
     res.status(404).json(error);
 });
+
+Stats.findOne().then(stats => {
+    if (!stats) {
+        const statsObj = new Stats({
+            totalTimeStamps: 0,
+            milestonesCreated: 0,
+            totalStudyTime: 0
+        })
+    }
+}).catch()
 
 mongoose.connect(mongoURI)
     .then(()=> {
