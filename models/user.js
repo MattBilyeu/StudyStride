@@ -36,8 +36,8 @@ const userSchema = new Schema({
     },
     milestones: {
         type: [{
-            type: String,
-            required: false
+            name: {type: String, required: false},
+            completed: {type: Boolean, required: false}
         }],
         default: []
     },

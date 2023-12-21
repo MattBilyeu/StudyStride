@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const Admin = require('../models/admin');
 
 exports.userLogin = (req, res, next) => {
-    const email = req.body.email;
+    const email = req.body.email.toLowerCase();
     const password = req.body.password;
     let foundUser;
     User.findOne({email: email})
@@ -18,6 +18,8 @@ exports.userLogin = (req, res, next) => {
                         if (!domatch) {
                             return res.status(422).json({message: 'Password and Email Combination Not Found'})
                         } else {
+                            req.session._id = foundUser._id.toString();
+                            req.session.role = 'member';
                             foundUser.password = 'redacted';
                             return res.status(200).json({foundUser})
                         }
@@ -37,7 +39,7 @@ exports.userLogin = (req, res, next) => {
 }
 
 exports.adminLogin = (req, res, next) => {
-    const email = req.body.email;
+    const email = req.body.email.toLowerCase();
     const password = req.body.password;
     let foundUser;
     Admin.findOne({email: email})
@@ -51,6 +53,8 @@ exports.adminLogin = (req, res, next) => {
                         if (!domatch) {
                             return res.status(422).json({message: 'Password and Email Combination Not Found'})
                         } else {
+                            req.session._id = foundUser._id.toString();
+                            req.session.role = 'admin';
                             foundUser.password = 'redacted';
                             return res.status(200).json({foundUser})
                         }

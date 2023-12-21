@@ -39,7 +39,7 @@ function resolveMilestones(oldArray, newArray) {
 
 exports.createUser = (req, res, next) => {
     const name = req.body.name;
-    const email = req.body.email;
+    const email = req.body.email.toLowerCase();
     const password = req.body.password;
     let foundUser;
     User.findOne({email: email})
@@ -91,7 +91,7 @@ exports.updateEmail = (req, res, next) => {
     let foundUser;
     User.findOne({email: oldEmail})
         .then(user => {
-            if (!user) {
+            if (!user || user._id.toString() !== req.session._id.toString()) {
                 return res.status(422).json({message: 'The reset email you used is no longer valid, please submit a new request.'})
             } else {
                 foundUser = user;
@@ -176,12 +176,11 @@ exports.sendPassUpdate = (req, res, next) => {
 exports.updatePassword = (req, res, next) => {
     const token = req.body.token;
     const password = req.body.password;
-    const email = req.body.email;
     let foundUser;
-    User.findOne({email: email})
+    User.findOne({resetToken: token})
         .then(user => {
-            if (!user) {
-                return res.status(404).json({message: 'A user with that email was not found.'})
+            if (!user || user.resetTokenExpiration < Date()) {
+                return res.status(404).json({message: 'Your token is invalid.'})
             } else {
                 foundUser = user;
                 return bcrypt.hash(password, 12)
@@ -209,8 +208,7 @@ exports.updatePassword = (req, res, next) => {
 
 exports.updateMilestones = (req, res, next) => {
     const newMilestones = req.body.milestones;
-    const userId = req.body.userId;
-    User.findById(userId)
+    User.findById(req.session._id)
         .then(user => {
             if (!user) {
                 return res.status(404).json({message: 'User not found.'})
@@ -237,12 +235,15 @@ exports.updateMilestones = (req, res, next) => {
 
 exports.createTopic = (req, res, next) => {
     const title = req.body.title;
-    const userId = req.body.userId;
-    User.findById(userId)
+    User.findById(req.session._id)
         .then(user => {
             if (!user) {
                 return res.status(404).json({message: 'User not found.'})
             } else {
+                const foundTopic = user.times.findIndex(time => time.topic === req.body.title);
+                if (foundTopic === -1) {
+                    return res.status(422).json({message: 'A topic by that name already exists.'})
+                }
                 const newTopic = {topic: title, totalTime: 0};
                 user.times.push(newTopic);
                 user.save()
@@ -263,18 +264,37 @@ exports.createTopic = (req, res, next) => {
         })
 }
 
+exports.deleteTopic = (req, res, next) => {
+    User.findById(req.session._id)
+        .then(user => {
+            if (!user) {
+                return res.status(404).json({message: 'User not found.'})
+            } else {
+                let topic = req.body.topic;
+
+            }
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.status(500);
+            next(error)
+        })
+}
+
 exports.startSession = (req, res, next) => {
     const startTime = new Date();
     const activeSession = {
         topic: req.body.topic,
         start: startTime
     };
-    User.findById(req.body.userId)
+    User.findById(req.session.userId)
         .then(user => {
             if (user.activeSession) {
                 return res.status(422).json({messsage: 'A session is already active.'})
             } else {
                 user.activeSession = activeSession;
+                const currentDate = Date();
+                user.userActiveUntil = currentDate + (30 * 24 * 60 * 60 * 1000);
                 user.save()
                     .then(updatedUser => {
                         res.status(201).json({message: 'Session started.', user: updatedUser})
@@ -308,7 +328,7 @@ exports.startSession = (req, res, next) => {
 exports.endSession = (req, res, next) => {
     let user;
     let dur;
-    User.findById(req.body.userId)
+    User.findById(req.session.userId)
         .then(foundUser => {
             if (!foundUser.activeSession) {
                 return res.status(404).json({message: 'An active session was not found'})
@@ -383,7 +403,7 @@ exports.endSession = (req, res, next) => {
 exports.seedTime = (req, res, next) => {
     const seedTime = req.body.seedTime;
     const seedTopic = req.body.seedTopic;
-    User.findById(req.body.userId)
+    User.findById(req.session.userId)
         .then(user => {
             if (!user) {
                 return res.status(404).json({message: 'User not found.'})
@@ -413,7 +433,7 @@ exports.seedTime = (req, res, next) => {
 }
 
 exports.toggleReceiveEmails = (req, res, next) => {
-    User.findById(req.body.userId)
+    User.findById(req.session.userId)
         .then(user => {
             if (!user) {
                 return res.status(404).json({message: 'User not found.'})
@@ -438,7 +458,13 @@ exports.toggleReceiveEmails = (req, res, next) => {
 }
 
 exports.deleteUser = (req, res, next) => {
-    User.findByIdAndDelete(req.body.userId)
+    let userId;
+    if (req.session.role === 'admin') {
+        userId = req.body.userId
+    } else {
+        userId = req.session.userId
+    }
+    User.findByIdAndDelete(userId)
         .then(deletedUser => {
             if (!deletedUser) {
                 return res.status(404).json({message: 'User not found.'})
@@ -456,6 +482,22 @@ exports.deleteUser = (req, res, next) => {
 exports.getStatsObject = (req, res, next) => {
     Stats.findOne()
         .then(statsObj => res.status(200).json({stats: statsObj}))
+        .catch(err => {
+            const error = new Error(err);
+            error.status(500);
+            next(error)
+        })
+}
+
+exports.getActiveUserCount = (req, res, next) => {
+    User.find()
+        .then(users => {
+            let currentDate = Date();
+            const activeUsers = users.filter(user => {
+                user.userActiveUntil > currentDate
+            });
+            return res.status(200).json({activeUserCount: activeUsers.length})
+        })
         .catch(err => {
             const error = new Error(err);
             error.status(500);

@@ -5,9 +5,8 @@ const User = require('../models/user');
 const { sendOne } = require('../util/emailer');
 
 exports.createFeedback = (req, res, next) => {
-    // Email admins on creation if no other feedback within 24 hours
     const text = req.body.text;
-    const userId = req.body.userId;
+    const userId = req.session.userId;
     const newFeedback = new Feedback({
         text: text,
         userId: userId,
@@ -48,6 +47,9 @@ exports.deleteFeedback = (req, res, next) => {
 }
 
 exports.emailSender = (req, res, next) => {
+    if (req.session.role !== 'admin') {
+        return res.status(422).json({message: 'Must be logged in as an admin.'})
+    }
     const message = req.body.message;
     const senderId = req.body.senderId;
     User.findById(senderId)
