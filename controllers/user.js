@@ -57,7 +57,7 @@ exports.createUser = (req, res, next) => {
                             email: email,
                             password: hashedPassword,
                             receivesEmails: true,
-                            times: [],
+                            topics: [],
                             activeSession: null,
                             milestones: [],
                             userActiveUntil: futureDate,
@@ -240,12 +240,12 @@ exports.createTopic = (req, res, next) => {
             if (!user) {
                 return res.status(404).json({message: 'User not found.'})
             } else {
-                const foundTopic = user.times.findIndex(time => time.topic === req.body.title);
-                if (foundTopic === -1) {
+                const foundTopic = user.topics.findIndex(topicObj => topicObj.topic === req.body.title);
+                if (foundTopic !== -1) {
                     return res.status(422).json({message: 'A topic by that name already exists.'})
                 }
-                const newTopic = {topic: title, totalTime: 0};
-                user.times.push(newTopic);
+                const newTopic = {topic: title, timestamps: []};
+                user.topics.push(newTopic);
                 user.save()
                     .then(updatedUser => {
                         return res.status(201).json({message: 'New topic created.', user: updatedUser})
@@ -271,7 +271,16 @@ exports.deleteTopic = (req, res, next) => {
                 return res.status(404).json({message: 'User not found.'})
             } else {
                 let topic = req.body.topic;
-
+                user.topics = user.topics.filter(topicObj => topicObj.topic !== topic);
+                user.save()
+                    .then(updatedUser => {
+                        return res.status(200).json({message: 'Topic deleted.', user: updatedUser})
+                    })
+                    .catch(err => {
+                        const error = new Error(err);
+                        error.status(500);
+                        next(error)
+                    })
             }
         })
         .catch(err => {
@@ -334,19 +343,18 @@ exports.endSession = (req, res, next) => {
                 return res.status(404).json({message: 'An active session was not found'})
             } else {
                 user = foundUser;
-                const stopTime = new Date();
+                const stopTime = Date();
                 const duration = (stopTime - user.activeSession.start)/(1000 * 60);
-                dur = duration;
+                dur = duration;     //Results in the total duration of time spent studying this session.
                 user.activeSession = null;
-                const index = user.times.findIndex(timeObj => timeObj.topic === user.activeSession.topic);
+                const index = user.topics.findIndex(topicObj => topicObj.topic === user.activeSession.topic);
                 if (index !== -1) {
-                    user.times[index].totalTime += duration
+                    user.totalTime += duration;
+                    const timeStampObj = {stamp: stopTime, duration: duration};
+                    user.topics[index].timestamps.push(timeStampObj);   //Saves the user's study session to their topic's timestamps array.
                 };
-                const totalStudyTime = (user.times.reduce((total, timeObj) => {
-                    return total + timeObj.totalTime
-                }, 0))/60;
-                if (Math.floor(totalStudyTime) > (user.badges.length * 10)) {
-                    const newBadge = new Badge({
+                if (Math.floor(user.totalTime/60) > (user.badges.length * 10)) {   //Compares the total study time to the number of badges the user has earned to see if they have earned a new badge.
+                    const newBadge = new Badge({    //The user earns a new badge ever 10 hours, so they are given a new badge if they have 10 hours more study time than 10*number of badges.
                         owner: user._id,
                         ownerName: user.name,
                         text: `${user.name} has earned a new badge!  That's another 10 hours spent studying.  Great work ${user.name}!  What dedication!`,
@@ -373,7 +381,7 @@ exports.endSession = (req, res, next) => {
                 } else {
                     user.save()
                         .then(updatedUser => {
-                            return res.status(200).json({message: 'Session ended.'})
+                            return res.status(200).json({message: 'Session ended.', user: updatedUser})
                         })
                         .catch(err => {
                             const error = new Error(err);
@@ -408,11 +416,12 @@ exports.seedTime = (req, res, next) => {
             if (!user) {
                 return res.status(404).json({message: 'User not found.'})
             } else {
-                const index = user.times.findIndex(time => time.topic === seedTopic);
+                const index = user.topics.findIndex(topicObj => topicObj.topic === seedTopic);
                 if (index !== -1) {
                     return res.status(404).json({message: `${seedTopic} was not found.`})
                 } else {
-                    user.times[index].totalTime += seedTime;
+                    const timestamp = {stamp: Date(), duration: seedTime};
+                    user.topics[index].timestamps.push(timestamp);
                     user.save()
                         .then(updatedUser => {
                             return res.status(200).json({message: 'Time seeded.', user: updatedUser})

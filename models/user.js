@@ -19,14 +19,19 @@ const userSchema = new Schema({
         type: Boolean,
         required: true
     },
-    times: {
-        type: [{
-            topic: {type: String, required: true},
-            totalTime: {type: Number, required: true}
-        }],
-        default: [],
-        required: false
+    totalTime: {
+        type: Number,
+        required: true
     },
+    topics: [
+        {
+            topic: {type: String, required: true},
+            timestamps: [{
+                stamp: {type: Date, required: true},
+                duration: {type: Number, required: true}
+            }]
+        }
+    ],
     activeSession: {
         type: {
             topic: {type: String, required: true},
