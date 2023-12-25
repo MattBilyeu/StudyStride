@@ -467,18 +467,13 @@ exports.toggleReceiveEmails = (req, res, next) => {
 }
 
 exports.deleteUser = (req, res, next) => {
-    let userId;
-    if (req.session.role === 'admin') {
-        userId = req.body.userId
-    } else {
-        userId = req.session.userId
-    }
+    const userId = req.body.userId
     User.findByIdAndDelete(userId)
         .then(deletedUser => {
             if (!deletedUser) {
                 return res.status(404).json({message: 'User not found.'})
             } else {
-                return res.status(200).json({message: 'User deleted.'})
+                return res.status(200).json({message: 'User deleted.', user: null})
             }
         })
         .catch(err => {

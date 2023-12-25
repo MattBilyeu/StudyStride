@@ -55,10 +55,10 @@ const userSchema = new Schema({
         ref: 'Badge',
         required: false
     }],
-    banned: [{
+    banned: {
         type: Boolean,
         required: true
-    }],
+    },
     resetToken: {
         type: String,
         required: false

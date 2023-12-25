@@ -1,0 +1,28 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+    --primary-color: #8fc05d;
+    --primary-background: black;
+    --secondary-background: #333333;
+    --box-shadow: #171717
+}
+
+html,
+body {
+    box-sizing: border-box;
+    background-color: var(--primary-background);
+    color: var(--primary-color);
+    margin: 0
+}
+
+.hidden {
+    display: none
+}
+
+.secondary-background {
+    padding: 0.5rem;
+    background-color: var(--secondary-background);
+}
+
+.smallText {
+    font-size: small
+}

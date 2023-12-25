@@ -1,0 +1,33 @@
+<header>
+    <nav class="mobile">
+        <img src="../assets/studystride.png" alt="Studystride Logo">
+        <div class="hamburger" (click)="toggleMobileNav()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </nav>
+    <nav class="desktop">
+        <ul>
+            <img src="../assets/studystride.png" alt="Studystride Logo">
+            <li>Home</li>
+            <li>Topic Data</li>
+            <li>Settings</li>
+            <li>Feedback</li>
+            <li class="patreon">Patreon</li>
+            <li>Log Out</li>
+        </ul>
+    </nav>
+</header>
+<div class="mobileBackdrop"></div>
+<div class="mobileNavButtons" [ngClass]="{hidden: hideMobileNav}" (click)="toggleMobileNav()">
+    <ul>
+        <li>Home</li>
+        <li>Topic Data</li>
+        <li>Settings</li>
+        <li>Feedback</li>
+        <li class="patreon">Patreon</li>
+        <li>Log Out</li>
+    </ul>
+</div>
+<router-outlet></router-outlet>

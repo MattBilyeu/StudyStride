@@ -32,7 +32,7 @@ exports.createAdmin = (req, res, next) => {
         })
 }
 
-exports.sendPassUpdate = (req, res, next) => {
+exports.sendAdminPassUpdate = (req, res, next) => {
     const email = req.body.email;
     let foundAdmin;
     Admin.findOne({email: email})
@@ -75,7 +75,7 @@ exports.sendPassUpdate = (req, res, next) => {
         })
 }
 
-exports.updatePassword = (req, res, next) => {
+exports.updateAdminPassword = (req, res, next) => {
     const token = req.body.token;
     const password = req.body.password;
     let foundUser;

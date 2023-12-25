@@ -1,0 +1,35 @@
+h1 {
+    text-align: center;
+    text-decoration: underline;
+    margin-top: 2rem
+}
+
+.milestoneContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.milestoneContainer ol {
+    width: 90%;
+    padding-left: 0;
+}
+
+.milestoneContainer li {
+    display: grid;
+    grid-template-columns: auto 3rem 3rem 3rem;
+    gap: 1rem;
+    margin-bottom: 1rem
+}
+
+.milestoneContainer li input {
+    text-align: center
+}
+
+.complete {
+    background-color: var(--primary-color);
+}
+
+.delete {
+    background-color: red;
+    color: white
+}

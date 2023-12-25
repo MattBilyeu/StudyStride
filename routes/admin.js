@@ -10,9 +10,9 @@ router.post('/create', adminController.createAdmin);
 
 router.post('/delete', adminController.deleteAdmin);
 
-router.post('/sendPassUpdate', adminController.sendPassUpdate);
+router.post('/sendPassUpdate', adminController.sendAdminPassUpdate);
 
-router.post('/updatePassword', adminController.updatePassword);
+router.post('/updatePassword', adminController.updateAdminPassword);
 
 router.post('/emailAll', adminController.emailAllUsers);
 

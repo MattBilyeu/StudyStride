@@ -1,0 +1,48 @@
+@import '../../../../styles.css';
+
+.sessionContainer,
+.pastProgressContainer {
+    padding: 0.5rem;
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1.5fr repeat(3, 1fr);
+    grid-template-rows: 2rem 0.5rem;
+    gap: 1rem;
+    justify-content: center;
+    text-align: center
+}
+
+.pastProgressContainer {
+    margin-top: 0;
+    grid-template-rows: 2rem repeat(2, 0.5rem)
+}
+
+h3 {
+    border-bottom: thin solid var(--primary-color);
+}
+
+h3, h2 {
+    display: inline;
+    width: fit-content;
+    font-size: 0.75rem;
+    margin: 0 auto;
+    align-self: end
+}
+
+.sessionControls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-evenly;
+    margin: 1rem auto;
+}
+
+.sessionControls select,
+.sessionControls button {
+    padding: 0.5rem;
+    color: var(--primary-background);
+    background-color: var(--primary-color);
+    border: none;
+    min-width: 100px;
+    font-weight: bold;
+}
