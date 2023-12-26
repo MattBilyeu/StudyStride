@@ -270,7 +270,13 @@ exports.deleteTopic = (req, res, next) => {
             if (!user) {
                 return res.status(404).json({message: 'User not found.'})
             } else {
-                let topic = req.body.topic;
+                const topic = req.body.topic;
+                if (req.body.mergeTopic !== 'None') { //If the user has selected a merge topic, push all timestamps from the topic to be deleted into the merge topic.
+                    const mergeTopic = req.body.mergeTopic;
+                    const mergeIndex = user.topics.findIndex(topicObj => topicObj.topic === mergeTopic);
+                    const topicIndex = user.topics.findIndex(topicObj => topicObj.topic);
+                    user.topics[mergeIndex].timestamps = user.topics[mergeIndex].timestamps.concat(user.topics[topicIndex].timestamps)
+                };
                 user.topics = user.topics.filter(topicObj => topicObj.topic !== topic);
                 user.save()
                     .then(updatedUser => {

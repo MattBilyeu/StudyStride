@@ -1,47 +1,7 @@
-<!-- <div *ngFor="let text of texts; let i = index" [ngClass]="{'secondary-background': i % 2 === 0}"> -->
-<div class="secondary-background">
-    <h1>Topic 1</h1>
-    <div class="pastProgressContainer">
-        <!-- Row 1 Start -->
-        <h3 class="one"></h3>
-        <h3 class="two">Hours Studied</h3>
-        <h3 class="three">Hours per Week</h3>
-        <h3 class="four">Badges Earned</h3>
-        <!-- Row 1 End -->
-        <!-- Row 2 Start -->
-        <h2 class="five">Last Month</h2>
-        <h2 class="six">38</h2>
-        <h2 class="seven">9.5</h2>
-        <h2 class="eight">3</h2>
-        <!-- Row 2 End -->
-        <!-- Row 3 Start -->
-        <h2 class="nine">All Time</h2>
-        <h2 class="ten">130</h2>
-        <h2 class="eleven">11.5</h2>
-        <h2 class="twelve">13</h2>
-        <!-- Row 3 End -->
-    </div>
-</div>
-<div>
-    <h1>Topic Two</h1>
-    <div class="pastProgressContainer">
-        <!-- Row 1 Start -->
-        <h3 class="one"></h3>
-        <h3 class="two">Hours Studied</h3>
-        <h3 class="three">Hours per Week</h3>
-        <h3 class="four">Badges Earned</h3>
-        <!-- Row 1 End -->
-        <!-- Row 2 Start -->
-        <h2 class="five">Last Month</h2>
-        <h2 class="six">45</h2>
-        <h2 class="seven">10.2</h2>
-        <h2 class="eight">4</h2>
-        <!-- Row 2 End -->
-        <!-- Row 3 Start -->
-        <h2 class="nine">All Time</h2>
-        <h2 class="ten">100</h2>
-        <h2 class="eleven">10</h2>
-        <h2 class="twelve">10</h2>
-        <!-- Row 3 End -->
-    </div>
-</div>
+<form class="addTopic" #f="ngForm" (ngSubmit)="createTopic(f)">
+    <label for="topic">Add a Topic: </label>
+    <input placeholder="topic name" name="newTopic" type="text" ngModel required>
+    <button type="submit">Create Topic</button>
+</form>
+<!-- <app-topic-stats-detail *ngFor="let text of texts; let i = index" [ngClass]="{'secondary-background': i % 2 === 0}"></app-topic-stats-detail> -->
+<app-topic-stats-detail></app-topic-stats-detail>

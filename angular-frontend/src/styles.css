@@ -27,3 +27,25 @@ body {
 .smallText {
     font-size: small
 }
+
+button {
+    padding: 0.5rem;
+    color: var(--primary-background);
+    background-color: var(--primary-color);
+    border: none;
+    min-width: 100px;
+    font-weight: bold;
+}
+
+.complete {
+    background-color: var(--secondary-background);
+}
+
+.delete {
+    background-color: red;
+    color: white
+}
+
+button:disabled {
+    background-color: darkgrey !important
+}

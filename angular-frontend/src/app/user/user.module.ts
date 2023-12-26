@@ -8,6 +8,8 @@ import { TopicStatsComponent } from './topic-stats/topic-stats.component';
 import { SettingsComponent } from './settings/settings.component';
 import { MilestonesComponent } from './user-dash/milestones/milestones.component';
 import { UserRoutingModule } from './user-routing.module';
+import { FormsModule } from '@angular/forms';
+import { TopicStatsDetailComponent } from './topic-stats/topic-stats-detail/topic-stats-detail.component';
 
 
 
@@ -19,11 +21,13 @@ import { UserRoutingModule } from './user-routing.module';
     UserFeedbackComponent,
     TopicStatsComponent,
     SettingsComponent,
-    MilestonesComponent
+    MilestonesComponent,
+    TopicStatsDetailComponent
   ],
   imports: [
     CommonModule,
-    UserRoutingModule
+    UserRoutingModule,
+    FormsModule
   ]
 })
 export class UserModule { }

@@ -1,0 +1,33 @@
+<div [ngClass]="{'secondary-background': index % 2 !== 0}">
+    <h1>Topic 1</h1>
+    <div class="pastProgressContainer">
+        <!-- Row 1 Start -->
+        <h3 class="one"></h3>
+        <h3 class="two">Hours Studied</h3>
+        <h3 class="three">Hours per Week</h3>
+        <h3 class="four">Badges Earned</h3>
+        <!-- Row 1 End -->
+        <!-- Row 2 Start -->
+        <h2 class="five">Last Month</h2>
+        <h2 class="six">38</h2>
+        <h2 class="seven">9.5</h2>
+        <h2 class="eight">3</h2>
+        <!-- Row 2 End -->
+        <!-- Row 3 Start -->
+        <h2 class="nine">All Time</h2>
+        <h2 class="ten">130</h2>
+        <h2 class="eleven">11.5</h2>
+        <h2 class="twelve">13</h2>
+        <!-- Row 3 End -->
+    </div>
+    <form class="deleteContainer" #d="ngForm" (ngSubmit)="deleteTopic(d)">
+        <div class="merge">
+            <label for="mergeTopic">Merge Timestamps?</label>
+            <select name="mergeTopic" ngModel required>
+                <option value="None">None</option>
+                <option value="Topic 2">Topic 2</option>
+            </select>
+        </div>
+        <button class="delete" type="submit" [disabled]="!d.valid">Delete Topic</button>
+    </form>
+</div>
