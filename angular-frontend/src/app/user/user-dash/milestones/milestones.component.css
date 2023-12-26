@@ -1,35 +1,61 @@
-h1 {
+h1, h3 {
     text-align: center;
     text-decoration: underline;
-    margin-top: 2rem
 }
 
-.milestoneContainer {
+.milestoneSection {
+    background-color: var(--primary-color);
+    color: var(--secondary-background);
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column
+}
+
+.milestoneContainer,
+.completedMilestoneContainer {
     display: flex;
     justify-content: center;
 }
 
-.milestoneContainer ol {
+.milestoneContainer ol,
+.completedMilestoneContainer ol {
     width: 90%;
     padding-left: 0;
 }
 
-.milestoneContainer li {
+.milestoneContainer li,
+.completedMilestoneContainer li {
     display: grid;
     grid-template-columns: auto 3rem 3rem 3rem;
     gap: 1rem;
     margin-bottom: 1rem
 }
 
-.milestoneContainer li input {
+.completedMilestoneContainer li {
+    grid-template-columns: auto 3rem
+}
+
+.milestoneContainer li input,
+.completedMilestoneContainer li input {
     text-align: center
 }
 
 .complete {
-    background-color: var(--primary-color);
+    background-color: var(--secondary-background);
 }
 
 .delete {
     background-color: red;
     color: white
+}
+
+button {
+    padding: 0.5rem;
+    color: var(--primary-color);
+    background-color: var(--secondary-background);
+    border: none;
+    box-shadow: 4px 4px 0 var(--box-shadow);
+    justify-self: center;
+    margin: auto;
+    font-weight: bold
 }

@@ -47,7 +47,9 @@ header nav.mobile .hamburger div {
     gap: 2rem;
     text-align: center;
     width: fit-content;
-    margin: 25% auto 0 auto
+    margin: 25% auto 0 auto;
+    font-weight: bold;
+    font-size: 2rem
 }
 
 .mobileNavButtons li {

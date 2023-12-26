@@ -1,16 +1,15 @@
 <div class="secondary-background">
+    <h1>This Session</h1>
     <div class="sessionContainer">
         <!-- Row 1 start -->
-        <h3></h3>
-        <h3>Hours Studied</h3>
-        <h3>Hours to Next Badge</h3>
-        <h3>Percent to Badge</h3>
+        <h3 class="one">Hours Studied</h3>
+        <h3 class="two">Hours to Next Badge</h3>
+        <h3 class="three">Percent to Badge</h3>
         <!-- Row 1 End -->
         <!-- Row 2 Start -->
-        <h2>This Session</h2>
-        <h2>1.25</h2>
-        <h2>8.75</h2>
-        <h2>55%</h2>
+        <h2 class="four">1.25</h2>
+        <h2 class="five">8.75</h2>
+        <h2 class="six">55%</h2>
         <!-- Row 2 End -->
     </div>
     <div class="sessionControls">
@@ -22,23 +21,24 @@
         <button [ngClass]='{"hidden": !activeSession}' (click)="endSession()">Stop</button>
     </div>
 </div>
+<h1>Past Performance</h1>
 <div class="pastProgressContainer">
     <!-- Row 1 Start -->
-    <h3></h3>
-    <h3>Hours Studied</h3>
-    <h3>Hours per Week</h3>
-    <h3>Badges Earned</h3>
+    <h3 class="one"></h3>
+    <h3 class="two">Hours Studied</h3>
+    <h3 class="three">Hours per Week</h3>
+    <h3 class="four">Badges Earned</h3>
     <!-- Row 1 End -->
     <!-- Row 2 Start -->
-    <h2>Last Month</h2>
-    <h2>38</h2>
-    <h2>9.5</h2>
-    <h2>3</h2>
+    <h2 class="five">Last Month</h2>
+    <h2 class="six">38</h2>
+    <h2 class="seven">9.5</h2>
+    <h2 class="eight">3</h2>
     <!-- Row 2 End -->
     <!-- Row 3 Start -->
-    <h2>All Time</h2>
-    <h2>130</h2>
-    <h2>11.5</h2>
-    <h2>13</h2>
+    <h2 class="nine">All Time</h2>
+    <h2 class="ten">130</h2>
+    <h2 class="eleven">11.5</h2>
+    <h2 class="twelve">13</h2>
     <!-- Row 3 End -->
 </div>
