@@ -1,0 +1,56 @@
+h1 {
+    text-decoration: underline;
+    text-align: center
+}
+
+form, h2, div {
+    text-align: center;
+}
+
+form {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: repeat(4, auto);
+    grid-template-areas:
+        'one one'
+        'two three'
+        'four five'
+        'six six';
+    max-width: 90%;
+    margin: auto auto 1rem auto;
+    gap: 1rem;
+}
+
+.one {
+    grid-area: one
+}
+
+.two {
+    grid-area: two
+}
+
+.three {
+    grid-area: three
+}
+
+.four {
+    grid-area: four
+}
+
+.five {
+    grid-area: five
+}
+
+.six {
+    grid-area: six;
+    width: fit-content;
+    margin: auto
+}
+
+.toggle {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    align-items: center;
+    margin: 1rem auto
+}

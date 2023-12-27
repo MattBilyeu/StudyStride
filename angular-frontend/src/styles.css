@@ -46,6 +46,46 @@ button {
     color: white
 }
 
+.loginForm {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto auto;
+    gap: 1rem;
+    justify-content: center;
+    margin: 1rem auto;
+    grid-template-areas:
+        'heading heading'
+        'one two'
+        'three four'
+        'five five'
+}
+
+.loginForm .heading {
+    grid-area: heading;
+    text-align: center;
+    text-decoration: underline
+}
+
+.loginForm .one {
+    grid-area: one
+}
+
+.loginForm .two {
+    grid-area: two
+}
+
+.loginForm .three {
+    grid-area: three
+}
+
+.loginForm .four {
+    grid-area: four
+}
+
+.loginForm .five {
+    grid-area: five
+}
+
 button:disabled {
     background-color: darkgrey !important
 }

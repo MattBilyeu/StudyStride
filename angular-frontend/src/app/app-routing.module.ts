@@ -1,14 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AppComponent } from './app.component';
+import { UserloginComponent } from './userlogin/userlogin.component';
+import { AdminloginComponent } from './adminlogin/adminlogin.component';
+import { PassResetComponent } from './pass-reset/pass-reset.component';
 
 const routes: Routes = [
+  {path: '', component: UserloginComponent},
+  {path: 'admin', component: AdminloginComponent},
+  {path: 'pass-reset/:role', component: PassResetComponent},
   {
     path: 'user',
     loadChildren: ()=> import('./user/user.module').then(m => m.UserModule)
   },
   {
-    path: 'admin',
+    path: 'admin-dash',
     loadChildren: ()=> import('./admin/admin.module').then(m => m.AdminModule)
   }
 ];

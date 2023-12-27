@@ -1,1 +1,26 @@
-<p>settings works!</p>
+<h1>User Settings</h1>
+<form #e="ngForm" (ngSubmit)="updateEmail(e)">
+    <h2 class="one">Update Email</h2>
+    <label class="two" for="email">New Email:</label>
+    <input class="three" name="email" type="email">
+    <label class="four" for="confirmEmail">Confirm Email:</label>
+    <input class="five" name="confirmEmail" type="email">
+    <button class="six" type="submit">Submit</button>
+</form>
+<form #s="ngForm" (ngSubmit)="seedTime(s)">
+    <h2 class="one">Seed Study Time</h2>
+    <label class="two" for="Topic">Topic:</label>
+    <select class="three" name="seedTopic">
+        <option value="Topic 1">Topic 1</option>
+    </select>
+    <label class="four" name="seedTime" for="time">Add Time &#40;in mins&#41;:</label>
+    <input class="five" name="seedTime" type="number">
+    <button class="six" type="submit">Seed Time</button>
+</form>
+<div class="toggle">
+    <label for="toggleReceiveEmails">Toggle Receives Emails:</label>
+    <button (click)="toggleReceiveEmails()">Toggle</button>
+</div>
+<div>
+    <button class="delete" (click)="deleteUser()">Delete Account</button>
+</div>

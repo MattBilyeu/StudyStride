@@ -61,6 +61,21 @@ header nav.mobile .hamburger div {
     z-index: 10
 }
 
+.alert {
+    display: flex;
+    margin: auto;
+    justify-content: center;
+    width: 150px;
+    position: fixed;
+    top: 3rem;
+    left: calc(50% - 75px);
+    background-color: var(--primary-color);
+    color: var(--secondary-background);
+    font-weight: bold;
+    font-size: large;
+    opacity: 0.8
+}
+
 @media screen and (min-width: 768px) {
     header nav.mobile {
         display: none

@@ -9,7 +9,6 @@ export class SessionComponent implements OnInit {
   activeSession: boolean = false;
 
   ngOnInit() {
-    console.log(this.activeSession);
   }
 
   startSession() {

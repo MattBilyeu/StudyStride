@@ -1,1 +1,5 @@
-<p>user-feedback works!</p>
+<form #f="ngForm" (ngSubmit)="submitFeedback(f)" class="feedback">
+    <h1>Thanks for your Feedback!</h1>
+    <editor [init]="editorConfig" id="editor" name="feedback" ngModel required></editor>
+    <button type="submit">Submit</button>
+</form>

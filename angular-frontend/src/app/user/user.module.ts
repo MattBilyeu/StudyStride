@@ -10,7 +10,7 @@ import { MilestonesComponent } from './user-dash/milestones/milestones.component
 import { UserRoutingModule } from './user-routing.module';
 import { FormsModule } from '@angular/forms';
 import { TopicStatsDetailComponent } from './topic-stats/topic-stats-detail/topic-stats-detail.component';
-
+import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 
 
 @NgModule({
@@ -27,7 +27,9 @@ import { TopicStatsDetailComponent } from './topic-stats/topic-stats-detail/topi
   imports: [
     CommonModule,
     UserRoutingModule,
-    FormsModule
-  ]
+    FormsModule,
+    EditorModule
+  ],
+  providers: [{provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js'}],
 })
 export class UserModule { }
