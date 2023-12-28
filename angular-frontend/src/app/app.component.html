@@ -1,4 +1,4 @@
-<header>
+<header *ngIf="dataService.loggedIn">
     <nav class="mobile">
         <img src="../assets/studystride.png" alt="Studystride Logo">
         <div class="hamburger" (click)="toggleMobileNav()">
@@ -33,4 +33,6 @@
 <div class="alert" *ngIf="alert">
     <p>{{ alert }}</p>
 </div>
-<router-outlet></router-outlet>
+<div [ngClass]="{hidden: !hideMobileNav}">
+    <router-outlet></router-outlet>
+</div>

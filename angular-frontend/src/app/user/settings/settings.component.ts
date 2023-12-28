@@ -7,7 +7,8 @@ import { NgForm } from '@angular/forms';
   styleUrl: './settings.component.css'
 })
 export class SettingsComponent {
-  testEmail: string = 'email'
+  testEmail: string = 'email';
+  receivesEmailsMess: string = 'Turn OFF emails:'
 
   updateEmail(form: NgForm) {
     //Email and confirm email

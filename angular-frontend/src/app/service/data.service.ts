@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 })
 export class DataService {
   message = new Subject<string>();
-  loggedIn: boolean = true;
+  loggedIn: boolean = false;
   
   constructor() { }
 }

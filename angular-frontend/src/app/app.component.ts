@@ -14,7 +14,7 @@ export class AppComponent implements OnInit, OnDestroy {
   hideMobileNav: boolean = true;
   alert: string;
 
-  constructor(private dataService: DataService,
+  constructor(public dataService: DataService,
               private router: Router) {}
 
   ngOnInit() {
@@ -27,6 +27,8 @@ export class AppComponent implements OnInit, OnDestroy {
         this.router.navigate(['admin-dash'])
       } else if (message === 'admin password reset') {
         this.router.navigate(['pass-reset/admin'])
+      } else if (message === 'signup') {
+        this.router.navigate(['signup'])
       } else {
         this.handleMessage(message);
       }

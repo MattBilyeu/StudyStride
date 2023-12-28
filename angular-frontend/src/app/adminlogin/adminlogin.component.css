@@ -1,0 +1,10 @@
+.imageContainer {
+    display: flex;
+    margin: auto;
+    justify-content: center;
+    background-color: var(--secondary-background)
+}
+
+img {
+    width: 200px;
+}

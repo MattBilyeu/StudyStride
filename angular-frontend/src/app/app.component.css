@@ -58,7 +58,7 @@ header nav.mobile .hamburger div {
     width: fit-content;
     text-align: center;
     margin: auto;
-    z-index: 10
+    z-index: 1500
 }
 
 .alert {

@@ -1,3 +1,6 @@
+<div class="imageContainer">
+    <img src="../../assets/studystride.png" alt="Studystride Logo">
+</div>
 <form class="loginForm" #f="ngForm" (ngSubmit)="login(f)">
     <h1 class="heading">User Login</h1>
     <label class="one" for="email">Email:</label>
@@ -5,4 +8,5 @@
     <label class="three" for="password">Password:</label>
     <input class="four" name="password" type="password" ngModel required>
     <button class="five" type="submit" [disabled]="!f.valid">Login</button>
+    <button type="button" (click)="signup()">Signup</button>
 </form>

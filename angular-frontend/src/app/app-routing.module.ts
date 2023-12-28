@@ -3,11 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { UserloginComponent } from './userlogin/userlogin.component';
 import { AdminloginComponent } from './adminlogin/adminlogin.component';
 import { PassResetComponent } from './pass-reset/pass-reset.component';
+import { SignupComponent } from './signup/signup.component';
 
 const routes: Routes = [
   {path: '', component: UserloginComponent},
   {path: 'admin', component: AdminloginComponent},
   {path: 'pass-reset/:role', component: PassResetComponent},
+  {path: 'signup', component: SignupComponent},
   {
     path: 'user',
     loadChildren: ()=> import('./user/user.module').then(m => m.UserModule)

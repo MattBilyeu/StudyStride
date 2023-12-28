@@ -1,3 +1,5 @@
+@import '../../../../styles.css';
+
 h1, h3 {
     text-align: center;
     text-decoration: underline;
@@ -48,5 +50,6 @@ button {
     box-shadow: 4px 4px 0 var(--box-shadow);
     justify-self: center;
     margin: auto;
-    font-weight: bold
+    font-weight: bold;
+    min-width: 3rem
 }
