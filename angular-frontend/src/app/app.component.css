@@ -88,7 +88,7 @@ header nav.mobile .hamburger div {
     header nav.desktop ul {
         display: flex;
         justify-content: space-between;
-        margin: 0 1rem;
+        margin: 0 1rem 0 0;
         padding-left: 0;
         align-items: center
     }

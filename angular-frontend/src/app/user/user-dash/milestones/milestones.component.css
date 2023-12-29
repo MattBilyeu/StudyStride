@@ -1,22 +1,31 @@
 @import '../../../../styles.css';
 
+.componentContainer {
+    background-color: var(--primary-color);
+    color: var(--secondary-background);
+}
+
 h1, h3 {
     text-align: center;
     text-decoration: underline;
 }
 
-.milestoneSection {
-    background-color: var(--primary-color);
-    color: var(--secondary-background);
+.milestoneSection,
+.buttonContainer {
     padding: 0.5rem;
     display: flex;
-    flex-direction: column
+    flex-direction: column;
+    max-width: 800px;
+    margin: auto
 }
 
 .milestoneContainer,
 .completedMilestoneContainer {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    max-width: 600px;
+    margin: auto
 }
 
 .milestoneContainer ol,
@@ -52,4 +61,11 @@ button {
     margin: auto;
     font-weight: bold;
     min-width: 3rem
+}
+
+@media screen and (min-width: 800px) {
+    .milestoneSection {
+        flex-direction: row;
+        flex-wrap: wrap
+    }
 }

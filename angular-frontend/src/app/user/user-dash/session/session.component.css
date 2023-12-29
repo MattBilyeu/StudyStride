@@ -15,6 +15,7 @@ h1 {
 
 .sessionContainer {
     display: grid;
+    grid-template-columns: auto auto;
     grid-template-areas:
         "one four"
         "two five"
@@ -98,6 +99,7 @@ h3, h2 {
     gap: 1rem;
     justify-content: space-evenly;
     margin: 1rem auto;
+    max-width: 600px
 }
 
 .sessionControls select,
@@ -108,18 +110,4 @@ h3, h2 {
     border: none;
     min-width: 100px;
     font-weight: bold;
-}
-
-@media screen and (min-width: 768px) {
-    .sessionContainer,
-    .pastProgressContainer {
-        padding: 0.5rem;
-        margin-top: 2rem;
-        display: grid;
-        grid-template-columns: 1.5fr repeat(3, 1fr);
-        grid-template-rows: 2rem 0.5rem;
-        gap: 1rem;
-        justify-content: center;
-        text-align: center
-    }
 }

@@ -8,7 +8,7 @@ import { NgForm } from '@angular/forms';
 })
 export class TopicStatsDetailComponent {
   // @Output() deleted: EventEmitter<User> = new EventEmitter<User>();
-  @Input() index: number = 1;
+  @Input() index: number = 2;
   targetObj: string = 'Sample Topic' //Will replace with target object in the future using @Input to bind, for now just populate with a string
 
   deleteTopic(form: NgForm) {

@@ -10,7 +10,7 @@ const routes: Routes = [
         path: '', 
         component: AdminComponent,
         children: [
-            {path: '', component: AdminDashComponent},
+            {path: '', component: AdminDashComponent, pathMatch: 'full'},
             {path: 'admin-feedback', component: AdminFeedbackComponent},
             {path: 'app-stats', component: AppStatsComponent}
         ]
@@ -21,4 +21,4 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class AdminRoutingModule {}
+export class AdminRoutingModule { }

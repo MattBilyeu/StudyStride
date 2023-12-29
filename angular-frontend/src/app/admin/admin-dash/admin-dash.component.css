@@ -34,3 +34,14 @@
 .emailForm button {
     width: fit-content
 }
+
+@media screen and (min-width: 800px) {
+    form.emailForm {
+        margin: auto 1rem 1rem 1rem;
+        justify-content: center
+    }
+
+    .emailForm button {
+        margin: auto
+    }
+}

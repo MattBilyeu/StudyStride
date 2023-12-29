@@ -7,3 +7,14 @@ form {
     justify-content: space-around;
     margin: 1rem auto
 }
+
+@media screen and (min-width: 800px) {
+    .detailContainer {
+        padding: 0.5rem;
+        background-color: var(--secondary-background);
+        max-width: 600px;
+        border-radius: 30px;
+        margin: 1rem;
+        box-shadow: 4px 4px 0 var(--primary-color);
+    }
+}

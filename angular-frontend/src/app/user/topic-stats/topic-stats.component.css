@@ -8,3 +8,9 @@
     color: var(--primary-color);
     align-items: center
 }
+
+.statsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center
+}

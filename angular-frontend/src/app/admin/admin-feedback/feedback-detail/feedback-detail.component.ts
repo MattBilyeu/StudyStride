@@ -10,7 +10,7 @@ export class FeedbackDetailComponent implements OnInit {
   @Input() feedbackId: string;
   feedback: string;
   // @Input() index: number;
-  index: number = 0;
+  index: number = 1;
   viewEditor: boolean = false;
   editorConfig = {
     base_url: '/tinymce',

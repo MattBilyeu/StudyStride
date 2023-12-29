@@ -1,3 +1,19 @@
-.tox-tinymce {
-    visibility: visible !important
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center
+}
+
+button {
+    line-height: 2rem;
+    width: fit-content;
+    margin: 1rem auto 0 auto
+}
+
+@media screen and (min-width: 800px) {
+    form {
+        max-width: 90%;
+        margin: auto
+    }
 }

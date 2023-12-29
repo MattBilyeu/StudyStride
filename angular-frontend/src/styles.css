@@ -54,6 +54,8 @@ button {
 
 .loginForm,
 .standardForm {
+    justify-content: center;
+    max-width: 600px;
     display: grid;
     grid-template-columns: auto auto;
     grid-template-rows: repeat(4, auto);

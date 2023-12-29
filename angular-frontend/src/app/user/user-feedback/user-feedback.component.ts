@@ -13,7 +13,8 @@ export class UserFeedbackComponent {
     base_url: '/tinymce',
     suffix: ".min",
     plugins: "lists link table",
-    toolbar: "numlist bullist link table"
+    toolbar: "numlist bullist link table",
+    menubar: ""
   };
   dangerousKeywords = [
     "import",

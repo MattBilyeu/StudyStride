@@ -1,23 +1,25 @@
-<div [ngClass]="{'secondary-background': index % 2 === 0}">
-    <form #f="ngForm" (ngSubmit)="emailSender(f)">
-        <div class="feedbackText">
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ligula tortor, rutrum sed nulla quis, pulvinar dictum dui. 
-                Vestibulum nulla leo, venenatis id fringilla non, sollicitudin ac mauris. Aliquam vel ultricies sem. Etiam id lacus libero. 
-                Pellentesque sed dui vel ante pharetra volutpat vitae ut diam. Donec ut commodo orci, ac malesuada nulla. Fusce lobortis tincidunt 
-                lectus, ut ornare eros. Aliquam id dictum libero. Aliquam erat volutpat. Sed vel ex sit amet tellus dapibus faucibus. Nulla pulvinar 
-                nibh est, eu vestibulum nibh fermentum lacinia. Suspendisse eu pellentesque justo. Nullam molestie eu elit sit amet porttitor. Vivamus 
-                sagittis mi vitae diam vestibulum, sed sodales lacus interdum.
-            </p>
-            <p>
-                Nullam in felis non diam scelerisque viverra. Nunc tincidunt malesuada ante sed pharetra. Sed et gravida nisl, quis faucibus felis. Integer 
-                lorem orci, ullamcorper eget ipsum nec, porta ullamcorper risus. Nullam elementum facilisis ligula eget euismod. Curabitur dignissim dui leo, 
-                ut cursus magna gravida quis. Nam varius et elit et imperdiet. Nullam tincidunt est id iaculis ullamcorper.
-            </p>
-        </div>
-        <editor *ngIf="viewEditor" [init]="editorConfig" name="message" ngModel required></editor>
-        <div class="buttons">
-            <button [ngClass]="{hidden: viewEditor}" type="button" (click)="displayEditor()">Open Editor</button><button [ngClass]="{hidden: !viewEditor}" [disabled]="!f.valid" type="submit">Email Sender</button><button (click)="deleteFeedback()" class="delete" type="button">Delete</button>
-        </div>
-    </form>
+<div class="detailContainer">
+    <div [ngClass]="{'secondary-background': index % 2 === 0}">
+        <form #f="ngForm" (ngSubmit)="emailSender(f)">
+            <div class="feedbackText">
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ligula tortor, rutrum sed nulla quis, pulvinar dictum dui. 
+                    Vestibulum nulla leo, venenatis id fringilla non, sollicitudin ac mauris. Aliquam vel ultricies sem. Etiam id lacus libero. 
+                    Pellentesque sed dui vel ante pharetra volutpat vitae ut diam. Donec ut commodo orci, ac malesuada nulla. Fusce lobortis tincidunt 
+                    lectus, ut ornare eros. Aliquam id dictum libero. Aliquam erat volutpat. Sed vel ex sit amet tellus dapibus faucibus. Nulla pulvinar 
+                    nibh est, eu vestibulum nibh fermentum lacinia. Suspendisse eu pellentesque justo. Nullam molestie eu elit sit amet porttitor. Vivamus 
+                    sagittis mi vitae diam vestibulum, sed sodales lacus interdum.
+                </p>
+                <p>
+                    Nullam in felis non diam scelerisque viverra. Nunc tincidunt malesuada ante sed pharetra. Sed et gravida nisl, quis faucibus felis. Integer 
+                    lorem orci, ullamcorper eget ipsum nec, porta ullamcorper risus. Nullam elementum facilisis ligula eget euismod. Curabitur dignissim dui leo, 
+                    ut cursus magna gravida quis. Nam varius et elit et imperdiet. Nullam tincidunt est id iaculis ullamcorper.
+                </p>
+            </div>
+            <editor *ngIf="viewEditor" [init]="editorConfig" name="message" ngModel required></editor>
+            <div class="buttons">
+                <button [ngClass]="{hidden: viewEditor}" type="button" (click)="displayEditor()">Open Editor</button><button [ngClass]="{hidden: !viewEditor}" [disabled]="!f.valid" type="submit">Email Sender</button><button (click)="deleteFeedback()" class="delete" type="button">Delete</button>
+            </div>
+        </form>
+    </div>
 </div>
