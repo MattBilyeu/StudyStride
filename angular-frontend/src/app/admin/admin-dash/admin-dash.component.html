@@ -1,5 +1,24 @@
-<ol>
-    <li>Create admin</li>
-    <li>Delete admin</li>
-    <li>Email all users</li>
-</ol>
+<form class="standardForm" #c="ngForm" (ngSubmit)="createAdmin(c)">
+    <h1 class="heading">Create Admin</h1>
+    <label for="name" class="one">Name:</label>
+    <input type="text" class="two" name="name" ngModel required>
+    <label for="email" class="three">Email:</label>
+    <input type="email" class="four" name="email" ngModel required>
+    <label for="password" class="five">Password:</label>
+    <input type="password" class="six" name="password" ngModel required>
+    <button class="seven" type="submit" [disabled]="!c.valid">Submit</button>
+</form>
+<form class="secondary-background" #d="ngForm" (ngSubmit)="deleteAdmin(d)">
+    <div class="flex-column">
+        <h1>Delete Admin</h1>
+        <select name="adminId" id="adminId" ngModel required>
+            <option value="PropertyBoundToId">Admin 1</option>
+        </select>
+        <button class="delete" [disabled]="!d.valid">Delete</button>
+    </div>
+</form>
+<form class="emailForm" #e="ngForm" (ngSubmit)="emailAllUsers(e)">
+    <h1>Email All Users</h1>
+    <editor [init]="editorConfig" id="editor" name="message" ngModel required></editor>
+    <button type="submit" [disabled]="!e.valid">Send</button>
+</form>

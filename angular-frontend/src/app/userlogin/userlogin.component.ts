@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../service/http.service';
 import { DataService } from '../service/data.service';
-import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
 @Component({
@@ -12,22 +11,21 @@ import { NgForm } from '@angular/forms';
 export class UserloginComponent implements OnInit {
 
   constructor(private http: HttpService,
-              private dataService: DataService,
-              private router: Router) {}
+              private dataService: DataService) {}
 
   ngOnInit() {
 
   }
 
   login(form: NgForm) {
-
+    this.dataService.routerService.next(['user'])
   }
 
   signup() {
-    this.dataService.message.next('signup')
+    this.dataService.routerService.next(['signup'])
   }
 
   passReset() {
-    this.dataService.message.next('user password reset')
+    this.dataService.routerService.next(['pass-reset/user'])
   }
 }

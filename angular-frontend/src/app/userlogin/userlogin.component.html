@@ -8,5 +8,5 @@
     <label class="three" for="password">Password:</label>
     <input class="four" name="password" type="password" ngModel required>
     <button class="five" type="submit" [disabled]="!f.valid">Login</button>
-    <button type="button" (click)="signup()">Signup</button>
+    <button type="button" (click)="signup()">Signup</button><button (click)="passReset()" type="button">Password Reset</button>
 </form>

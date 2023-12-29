@@ -1,0 +1,36 @@
+.standardForm {
+    grid-template-rows: repeat(5, auto);
+    grid-template-areas:
+        'heading heading'
+        'one two'
+        'three four'
+        'five six'
+        'seven eight'
+}
+
+.standardForm .six {
+    grid-area: six
+}
+
+.standardForm .seven {
+    grid-area: seven
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    margin: auto;
+    width: fit-content
+}
+
+.emailForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.emailForm button {
+    width: fit-content
+}

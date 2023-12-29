@@ -1,1 +1,9 @@
-<p>pass-reset works!</p>
+<div class="imageContainer">
+    <img src="../../assets/studystride.png" alt="Studystride Logo">
+</div>
+<form class="loginForm" #f="ngForm" (ngSubmit)="sendReset(f)">
+    <h1 class="heading">Password Reset</h1>
+    <label for="email" class="one">Email:</label>
+    <input type="email" class="two" name="email" ngModel required>
+    <button type="submit" class="three" [disabled]="!f.valid">Send Reset</button>
+</form>

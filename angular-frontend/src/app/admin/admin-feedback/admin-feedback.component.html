@@ -1,6 +1,2 @@
-<ol>
-    <li>Ban</li>
-    <li>Delete Feedback</li>
-    <li>Email sender</li>
-    <li>Acknowledge Feedback</li>
-</ol>
+<app-feedback-detail *ngFor="let feedback of feedbacks" [feedbackId]="'feedback._id'"></app-feedback-detail>
+<app-feedback-detail></app-feedback-detail>

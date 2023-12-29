@@ -6,5 +6,6 @@ import { Component } from '@angular/core';
   styleUrl: './admin-feedback.component.css'
 })
 export class AdminFeedbackComponent {
+  feedbacks: string[]; //Change to feedback objects once I create the models.
 
 }

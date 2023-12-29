@@ -9,7 +9,8 @@ import { Subscription } from 'rxjs';
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit, OnDestroy {
-  subscription: Subscription;
+  messageSubscription: Subscription;
+  routerSubscription: Subscription;
   title = 'Studystride';
   hideMobileNav: boolean = true;
   alert: string;
@@ -18,25 +19,20 @@ export class AppComponent implements OnInit, OnDestroy {
               private router: Router) {}
 
   ngOnInit() {
-    this.subscription = this.dataService.message.subscribe(message => {
-      if (message === 'user logged in') {
-        this.router.navigate(['user'])
-      } else if (message === 'user password reset') {
-        this.router.navigate(['pass-reset/user'])
-      } else if (message === 'admin logged in') {
-        this.router.navigate(['admin-dash'])
-      } else if (message === 'admin password reset') {
-        this.router.navigate(['pass-reset/admin'])
-      } else if (message === 'signup') {
-        this.router.navigate(['signup'])
-      } else {
-        this.handleMessage(message);
-      }
+    this.messageSubscription = this.dataService.message.subscribe(message => {
+        this.handleMessage(message)
+    });
+    this.routerSubscription = this.dataService.routerService.subscribe(routes => {
+      this.handleRoutes(routes)
     })
   }
 
-  handleMessage(messsage: string) {
-    this.alert === 'alert';
+  handleRoutes(routes: string[]) {
+    this.router.navigate(routes)
+  }
+
+  handleMessage(message: string) {
+    this.alert === message;
     setTimeout(()=> {
       this.alert = undefined
     }, 2000)
@@ -47,6 +43,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.messageSubscription.unsubscribe();
+    this.routerSubscription.unsubscribe()
   }
 }

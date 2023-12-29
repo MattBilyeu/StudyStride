@@ -1,0 +1,9 @@
+form {
+    margin: 1rem;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-around;
+    margin: 1rem auto
+}
