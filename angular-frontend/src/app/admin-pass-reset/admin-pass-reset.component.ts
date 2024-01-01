@@ -7,11 +7,11 @@ import { HttpService } from '../service/http.service';
 import { Response } from '../models/response.model';
 
 @Component({
-  selector: 'app-pass-reset',
-  templateUrl: './pass-reset.component.html',
-  styleUrl: './pass-reset.component.css'
+  selector: 'app-admin-pass-reset',
+  templateUrl: './admin-pass-reset.component.html',
+  styleUrl: './admin-pass-reset.component.css'
 })
-export class PassResetComponent implements OnInit, OnDestroy {
+export class AdminPassResetComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   paramInfo!: string;
   requestReset: boolean = true;
@@ -23,7 +23,7 @@ export class PassResetComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.route.params.subscribe((params: Params) => {
       this.paramInfo = params['paramInfo'];
-      if (params['paramInfo'] !== 'user') {
+      if (this.paramInfo !== 'admin') {
         this.requestReset = false;
       }
     })
@@ -35,7 +35,7 @@ export class PassResetComponent implements OnInit, OnDestroy {
     if (password !== confirmPassword) {
       return alert('Passwords must match.')
     } else {
-      this.http.updatePassword(this.paramInfo, password).subscribe((response: Response) => {
+      this.http.updateAdminPassword(this.paramInfo, password).subscribe((response: Response) => {
         this.dataService.message.next(response.message);
         if (response.user) {
           this.dataService.user = response.user;
@@ -46,7 +46,7 @@ export class PassResetComponent implements OnInit, OnDestroy {
   }
 
   sendReset(form: NgForm) {
-    this.http.sendPassUpdate(form.value.email).subscribe((response: Response) => {
+    this.http.sendAdminPassUpdate(form.value.email).subscribe((response: Response) => {
       this.dataService.message.next(response.message)
     })
   }

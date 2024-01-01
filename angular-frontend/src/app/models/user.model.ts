@@ -1,37 +1,38 @@
-interface timestamp {
+interface Timestamp {
     stamp: Date;
     duration: Number
 }
 
-interface topicObj {
-    topic: String;
-    timestamps: timestamp[];
+interface TopicObj {
+    topic: string;
+    timestamps: Timestamp[];
 }
 
 interface sessionObj {
-    topic: String;
+    topic: string;
     start: Date
 }
 
-interface milestone {
-    name: String;
+interface Milestone {
+    name: string;
     completed: Boolean
 }
 
 export class User {
-    _id?: String;
-    name: String;
-    email: String;
-    password: String;
+    _id?: string;
+    name: string;
+    email: string;
+    password: string;
+    createDate: Date;
     receivesEmails: Boolean;
     totalTime: Number;
-    topics: topicObj[];
+    topics: TopicObj[];
     activeSession?: sessionObj;
-    milestones?: milestone[];
+    milestones?: Milestone[];
     userActiveUntil: Date;
-    badges: String[];
+    badges: string[];
     banned: Boolean;
-    resetToken?: String;
+    resetToken?: string;
     resetExpiration?: Date
 
     constructor() {

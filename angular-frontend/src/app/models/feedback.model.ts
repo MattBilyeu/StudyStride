@@ -1,7 +1,7 @@
 export class Feedback {
-    _id?: String;
-    text: String;
-    userId: String;
+    _id?: string;
+    text: string;
+    userId: string;
     createDate: Date;
     acknowledged: Boolean;
 

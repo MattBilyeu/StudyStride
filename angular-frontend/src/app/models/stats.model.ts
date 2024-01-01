@@ -1,5 +1,5 @@
 export class Stats {
-    _id?: String;
+    _id?: string;
     totalTimeStamps: Number;
     milestonesCreated: Number;
     totalStudyTime: Number;

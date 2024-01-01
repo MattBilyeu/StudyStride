@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const userController = require('../controllers/user');
+const feedbackController = require('../controllers/feedback');
 
 router.post('/create', userController.createUser);
 
@@ -21,6 +22,8 @@ router.post('/deleteTopic', userController.deleteTopic);
 router.post('/startSession', userController.startSession);
 
 router.post('/endSession', userController.endSession);
+
+router.post('/submitFeedback', feedbackController.createFeedback);
 
 router.post('/seedTime', userController.seedTime);
 

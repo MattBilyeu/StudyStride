@@ -31,6 +31,16 @@
     gap: 1rem;
 }
 
+.emailForm .group {
+    display: flex;
+    gap: 1rem;
+    margin: auto
+}
+
+.emailForm .group label {
+    font-weight: bold
+}
+
 .emailForm button {
     width: fit-content
 }

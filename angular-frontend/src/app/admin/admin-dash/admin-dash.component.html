@@ -12,13 +12,17 @@
     <div class="flex-column">
         <h1>Delete Admin</h1>
         <select name="adminId" id="adminId" ngModel required>
-            <option value="PropertyBoundToId">Admin 1</option>
+            <option *ngFor="let admin of allAdmins" [value]="admin._id">{{ admin.name }}</option>
         </select>
         <button class="delete" [disabled]="!d.valid">Delete</button>
     </div>
 </form>
 <form class="emailForm" #e="ngForm" (ngSubmit)="emailAllUsers(e)">
     <h1>Email All Users</h1>
+    <div class="group">
+        <label for="subject">Subject:</label>
+        <input type="text" name="subject" ngModel required>
+    </div>
     <editor [init]="editorConfig" id="editor" name="message" ngModel required></editor>
     <button type="submit" [disabled]="!e.valid">Send</button>
 </form>

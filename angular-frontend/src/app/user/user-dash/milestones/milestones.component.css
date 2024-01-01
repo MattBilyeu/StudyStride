@@ -30,16 +30,22 @@ h1, h3 {
 
 .milestoneContainer ol,
 .completedMilestoneContainer ol {
-    width: 90%;
     padding-left: 0;
+    justify-content: center;
+    margin: auto
 }
 
 .milestoneContainer li,
 .completedMilestoneContainer li {
     display: grid;
-    grid-template-columns: auto 3rem 3rem 3rem;
+    grid-template-columns: auto 3.5rem 3rem;
     gap: 1rem;
-    margin-bottom: 1rem
+    margin-bottom: 1rem;
+    align-items: center
+}
+
+.centered {
+    text-align: center
 }
 
 .completedMilestoneContainer li {
@@ -61,6 +67,15 @@ button {
     margin: auto;
     font-weight: bold;
     min-width: 3rem
+}
+
+.createMilestoneContainer form {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: auto;
+    width: fit-content;
+    align-items: center
 }
 
 @media screen and (min-width: 800px) {

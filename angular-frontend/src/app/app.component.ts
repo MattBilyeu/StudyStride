@@ -15,7 +15,7 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'Studystride';
   hideMobileNav: boolean = true;
   alert: string;
-  role: string = 'Admin'
+  role: string = 'User'
 
   constructor(public dataService: DataService,
               private router: Router) {}
@@ -43,6 +43,14 @@ export class AppComponent implements OnInit, OnDestroy {
 
   toggleMobileNav() {
     this.hideMobileNav = !this.hideMobileNav
+  }
+
+  logout() {
+    this.dataService.loggedIn = false;
+    this.dataService.user = undefined;
+    this.role = undefined;
+    this.router.navigate(['']);
+    localStorage.removeItem('loginData')
   }
 
   ngOnDestroy() {

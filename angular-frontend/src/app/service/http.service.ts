@@ -42,8 +42,8 @@ export class HttpService {
     return this.http.post('/user/createTopic', {title: title})
   }
 
-  deleteTopic(topic: string) {
-    return this.http.post('/user/deleteTopic', {topic: topic})
+  deleteTopic(topic: string, mergeTopic?: string) {
+    return this.http.post('/user/deleteTopic', {topic: topic, mergeTopic: mergeTopic})
   }
 
   startSession(topic: string) {
@@ -52,6 +52,22 @@ export class HttpService {
 
   endSession() {
     return this.http.post('/user/endSession', {})
+  }
+
+  getFeedback() {
+    return this.http.post('/admin/getFeedback', {})
+  }
+
+  createFeedback(text: string) {
+    return this.http.post('/user/createFeedback', {text: text})
+  }
+
+  deleteFeedback(feedbackId: string) {
+    return this.http.post('/admin/deleteFeedback', {feedbackId: feedbackId})
+  }
+
+  emailSender(message: string, senderId: string) {
+    return this.http.post('/admin/emailSender', {message: message, senderId: senderId})
   }
 
   seedTime(time: number, topic: string) {
@@ -85,6 +101,10 @@ export class HttpService {
 
   updateAdminPassword(token: string, password: string) {
     return this.http.post('/admin/updateAdminPassword', {token: token, password: password})
+  }
+
+  getAllAdmins() {
+    return this.http.post('/admin/getAllAdmins', {})
   }
 
   emailAllUsers(subject: string, text: string) {

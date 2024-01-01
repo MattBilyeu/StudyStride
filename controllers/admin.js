@@ -55,7 +55,7 @@ exports.sendAdminPassUpdate = (req, res, next) => {
                             `
                                 <h1>Password Reset</h1>
                                 <p>You requested a password reset.</p>
-                                <p>Click this <a href="http://localhost:3000/pass-reset/${token}">link</a> to set a new password.</p>
+                                <p>Click this <a href="http://localhost:3000/admin-pass-reset/${token}">link</a> to set a new password.</p>
                             `
                         );
                         res.status(200).json({message: 'Password Reset Sent - Please check your email.'})
@@ -117,6 +117,26 @@ exports.emailAllUsers = (req, res, next) => {
             const userEmails = users.filter(users => users.receivesEmails).map(user => user.email);
             sendMany(userEmails, req.body.subject, req.body.text);
             return res.status(200).json({message: 'Emails sent.'})
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.status(500);
+            next(error)
+        })
+}
+
+exports.getAllAdmins = (req, res, next) => {
+    Admin.find()
+        .then(admins => {
+            const adminArray = [];
+            admins.forEach(admin => {
+                const adminObj = {
+                    name: admin.name,
+                    _id: admin._id
+                };
+                adminArray.push(adminObj);
+            })
+            res.status(200).response({message: 'All admins provided.', allAdmins: adminArray})
         })
         .catch(err => {
             const error = new Error(err);

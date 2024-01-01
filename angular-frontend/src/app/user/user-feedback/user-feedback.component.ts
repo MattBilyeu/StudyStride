@@ -49,7 +49,7 @@ export class UserFeedbackComponent {
       if (feedback.lowerCase().includes(this.dangerousKeywords[i].toLowerCase())) {
         this.handleFeedback()
       } else {
-        //Create feedback in server with HTTP service
+        this.http.createFeedback(feedback).subscribe()
         this.handleFeedback()
       }
     }

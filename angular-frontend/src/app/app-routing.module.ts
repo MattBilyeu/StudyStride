@@ -4,11 +4,13 @@ import { UserloginComponent } from './userlogin/userlogin.component';
 import { AdminloginComponent } from './adminlogin/adminlogin.component';
 import { PassResetComponent } from './pass-reset/pass-reset.component';
 import { SignupComponent } from './signup/signup.component';
+import { AdminPassResetComponent } from './admin-pass-reset/admin-pass-reset.component';
 
 const routes: Routes = [
   {path: '', component: UserloginComponent},
   {path: 'admin', component: AdminloginComponent},
-  {path: 'pass-reset/:role', component: PassResetComponent},
+  {path: 'pass-reset/:paramInfo', component: PassResetComponent},
+  {path: 'admin-pass-reset/:paramInfo', component: AdminPassResetComponent},
   {path: 'signup', component: SignupComponent},
   {
     path: 'user',

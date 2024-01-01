@@ -5,19 +5,16 @@
         <h3 class="one"></h3>
         <h3 class="two">Hours Studied</h3>
         <h3 class="three">Hours per Week</h3>
-        <h3 class="four">Badges Earned</h3>
         <!-- Row 1 End -->
         <!-- Row 2 Start -->
-        <h2 class="five">Last Month</h2>
-        <h2 class="six">38</h2>
-        <h2 class="seven">9.5</h2>
-        <h2 class="eight">3</h2>
+        <h2 class="four">Last Month</h2>
+        <h2 class="five">{{ pastProgress.last30HrsStudied }}</h2>
+        <h2 class="six">{{ pastProgress.last30HrsPerWeek }}</h2>
         <!-- Row 2 End -->
         <!-- Row 3 Start -->
-        <h2 class="nine">All Time</h2>
-        <h2 class="ten">130</h2>
-        <h2 class="eleven">11.5</h2>
-        <h2 class="twelve">13</h2>
+        <h2 class="seven">All Time</h2>
+        <h2 class="eight">{{ pastProgress.allTimeHrsStudied }}</h2>
+        <h2 class="nine">{{ pastProgress.allTimeHrsPerWeek }}</h2>
         <!-- Row 3 End -->
     </div>
     <form class="deleteContainer" #d="ngForm" (ngSubmit)="deleteTopic(d)">
@@ -25,7 +22,7 @@
             <label for="mergeTopic">Merge Timestamps?</label>
             <select name="mergeTopic" ngModel required>
                 <option value="None">None</option>
-                <option value="Topic 2">Topic 2</option>
+                <option *ngFor="let topic of topics" value="Topic 2">{{ topic }}</option>
             </select>
         </div>
         <button class="delete" type="submit" [disabled]="!d.valid">Delete Topic</button>

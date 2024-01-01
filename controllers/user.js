@@ -56,6 +56,7 @@ exports.createUser = (req, res, next) => {
                             name: name,
                             email: email,
                             password: hashedPassword,
+                            createDate: new Date(),
                             receivesEmails: true,
                             topics: [],
                             activeSession: null,
@@ -506,7 +507,7 @@ exports.getActiveUserCount = (req, res, next) => {
             const activeUsers = users.filter(user => {
                 user.userActiveUntil > currentDate
             });
-            return res.status(200).json({activeUserCount: activeUsers.length})
+            return res.status(200).json({allUsers: users.length, activeUsers: activeUsers.length})
         })
         .catch(err => {
             const error = new Error(err);

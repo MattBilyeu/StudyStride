@@ -68,31 +68,6 @@ exports.emailSender = (req, res, next) => {
         })
 }
 
-exports.acknowledgeFeedback = (req, res, next) => {
-    Feedback.findById(req.body.feedbackId)
-        .then(feedback => {
-            if (!feedback) {
-                return res.status(404).json({message: 'Feedback not found.'})
-            } else {
-                feedback.acknowledged = true;
-                feedback.save()
-                    .then(updatedFeedback => {
-                        return res.status(200).json({message: 'Feedback acknowledged.', feedback: updatedFeedback})
-                    })
-                    .catch(err => {
-                        const error = new Error(err);
-                        error.status(500);
-                        next(error)
-                    })
-            }
-        })
-        .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
-        })
-}
-
 exports.getFeedback = (req, res, next) => {
     Feedback.find()
         .then(feedbacks => {

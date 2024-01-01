@@ -2,23 +2,24 @@
     <h1>This Session</h1>
     <div class="sessionContainer">
         <!-- Row 1 start -->
-        <h3 class="one">Hours Studied</h3>
+        <h3 class="one">Time Studied</h3>
         <h3 class="two">Hours to Next Badge</h3>
         <h3 class="three">Percent to Badge</h3>
         <!-- Row 1 End -->
         <!-- Row 2 Start -->
-        <h2 class="four">1.25</h2>
-        <h2 class="five">8.75</h2>
-        <h2 class="six">55%</h2>
+        <h2 class="four">{{ sessionTimeStudied }}</h2>
+        <h2 class="five">{{ hoursToNextBadge }}</h2>
+        <h2 class="six">{{ percentToBadge }}%</h2>
         <!-- Row 2 End -->
     </div>
     <div class="sessionControls">
-        <select name="topic" id="topic">
-            <option value="personal">Personal</option>
-            <option value="coding">Coding</option>
+        <select *ngIf="topics.length !== 0" name="topic" #topic>
+            <option [value]="topic" *ngFor="let topic of topics">{{ topic }}</option>
         </select>
-        <button [ngClass]='{"hidden": activeSession}' (click)="startSession()">Start</button>
-        <button [ngClass]='{"hidden": !activeSession}' (click)="endSession()">Stop</button>
+        <p *ngIf="topics.length === 0">Please create a topic in the topic-stats page in order to start a session.</p>
+        <p *ngIf="sessionRunning">Session running...</p>
+        <button [ngClass]='{"hidden": !sessionRunning}' (click)="startSession()">Start</button>
+        <button *ngIf="topics.length !== 0" [ngClass]='{"hidden": sessionRunning}' (click)="endSession()">Stop</button>
     </div>
 </div>
 <h1>Past Performance</h1>
@@ -30,15 +31,15 @@
     <h3 class="four">Badges Earned</h3>
     <!-- Row 1 End -->
     <!-- Row 2 Start -->
-    <h2 class="five">Last Month</h2>
-    <h2 class="six">38</h2>
-    <h2 class="seven">9.5</h2>
-    <h2 class="eight">3</h2>
+    <h2 class="five">Last 30 Days</h2>
+    <h2 class="six">{{ pastProgress.last30HrsStudied }}</h2>
+    <h2 class="seven">{{ pastProgress.last30HrsPerWeek }}</h2>
+    <h2 class="eight">{{ pastProgress.last30Badges }}</h2>
     <!-- Row 2 End -->
     <!-- Row 3 Start -->
     <h2 class="nine">All Time</h2>
-    <h2 class="ten">130</h2>
-    <h2 class="eleven">11.5</h2>
-    <h2 class="twelve">13</h2>
+    <h2 class="ten">{{ pastProgress.allTimeHrsStudied }}</h2>
+    <h2 class="eleven">{{ pastProgress.allTimeHrsPerWeek }}</h2>
+    <h2 class="twelve">{{ pastProgress.allTimeBadgesEarned }}</h2>
     <!-- Row 3 End -->
 </div>

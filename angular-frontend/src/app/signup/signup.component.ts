@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { HttpService } from '../service/http.service';
+import { DataService } from '../service/data.service';
+import { Response } from '../models/response.model';
 
 @Component({
   selector: 'app-signup',
@@ -8,8 +11,19 @@ import { NgForm } from '@angular/forms';
 })
 export class SignupComponent {
 
-  signup(form: NgForm) {
-    
-  }
+  constructor(private http: HttpService,
+              private dataService: DataService) {}
 
+  signup(form: NgForm) {
+    if (form.value.password === form.value.confirmPassword) {
+      this.http.createUser(form.value.name, form.value.email.toLowerCase(), form.value.password)
+        .subscribe((response: Response) => {
+          this.dataService.message.next(response.message);
+          if (response.user) {
+            this.dataService.user = response.user;
+            this.dataService.routerService.next([''])
+          }
+        })
+    }
+  }
 }

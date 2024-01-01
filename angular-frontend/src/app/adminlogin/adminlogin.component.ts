@@ -16,6 +16,6 @@ export class AdminloginComponent {
   }
 
   passReset() {
-    this.dataService.routerService.next(['pass-reset/admin'])
+    this.dataService.routerService.next(['admin-pass-reset/admin'])
   }
 }

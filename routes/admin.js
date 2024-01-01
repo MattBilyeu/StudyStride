@@ -16,12 +16,12 @@ router.post('/updatePassword', adminController.updateAdminPassword);
 
 router.post('/emailAll', adminController.emailAllUsers);
 
+router.post('/getAllAdmins', adminController.getAllAdmins);
+
 router.post('/ban', adminController.banUser);
 
-router.post('/createFeedback', feedbackController.createFeedback);
+router.post('/getFeedback', feedbackController.getFeedback);
 
 router.post('/deleteFeedback', feedbackController.deleteFeedback);
 
 router.post('/emailSender', feedbackController.emailSender);
-
-router.post('/acknowledgeFeedback', feedbackController.acknowledgeFeedback);

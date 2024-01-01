@@ -9,6 +9,7 @@ import { PassResetComponent } from './pass-reset/pass-reset.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { SignupComponent } from './signup/signup.component';
+import { AdminPassResetComponent } from './admin-pass-reset/admin-pass-reset.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { SignupComponent } from './signup/signup.component';
     UserloginComponent,
     AdminloginComponent,
     PassResetComponent,
-    SignupComponent
+    SignupComponent,
+    AdminPassResetComponent
   ],
   imports: [
     BrowserModule,

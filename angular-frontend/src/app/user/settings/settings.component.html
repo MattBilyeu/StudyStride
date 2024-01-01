@@ -7,13 +7,15 @@
             <input class="three" name="email" type="email">
             <label class="four" for="confirmEmail">Confirm Email:</label>
             <input class="five" name="confirmEmail" type="email">
+            <label for="password">Password:</label>
+            <input type="password" name="password" ngModel required>
             <button class="six" type="submit">Submit</button>
         </form>
         <form #s="ngForm" (ngSubmit)="seedTime(s)">
             <h1 class="one">Seed Study Time</h1>
             <label class="two" for="Topic">Topic:</label>
-            <select class="three" name="seedTopic">
-                <option value="Topic 1">Topic 1</option>
+            <select class="three" name="seedTopic" ngModel required>
+                <option *ngFor="let topic of topics" [value]="topic">{{ topic }}</option>
             </select>
             <label class="four" name="seedTime" for="time">Add Time &#40;in mins&#41;:</label>
             <input class="five" name="seedTime" type="number">

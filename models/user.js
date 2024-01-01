@@ -15,6 +15,10 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    createDate: {
+        type: Date,
+        required: true
+    },
     receivesEmails: {
         type: Boolean,
         required: true

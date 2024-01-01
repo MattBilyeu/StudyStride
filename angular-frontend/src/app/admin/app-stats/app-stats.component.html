@@ -1,11 +1,13 @@
 <div class="grid">
     <h1 class="heading">Application Stats</h1>
     <label for="timestamps">Total Timestamps:</label>
-    <p>1000</p>
+    <p>{{ appObject.totalTimeStamps }}</p>
     <label for="milestones">Milestones Created:</label>
-    <p>500</p>
+    <p>{{ appObject.milestonesCreated }}</p>
     <label for="totalStudyTime">Total Study Time (in hrs):</label>
-    <p>10,000</p>
+    <p>{{ appObject.totalStudyTime }}</p>
     <label for="activeUsers">Active Users:</label>
-    <p>200</p>
+    <p>{{ userCounts.activeUsers }}</p>
+    <label for="activeUsers">All Users:</label>
+    <p>{{ userCounts.allUsers }}</p>
 </div>

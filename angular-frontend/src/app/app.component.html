@@ -16,7 +16,7 @@
                 <li (click)="handleRoutes(['user/settings'])">Settings</li>
                 <li (click)="handleRoutes(['user/feedback'])">Feedback</li>
                 <!-- <li class="patreon">Patreon</li> -->
-                <li>Log Out</li>
+                <li (click)="logout()">Log Out</li>
             </ul>
         </nav>
     </header>
@@ -28,7 +28,7 @@
             <li (click)="handleRoutes(['user/settings'])">Settings</li>
             <li (click)="handleRoutes(['user/feedback'])">Feedback</li>
             <li class="patreon">Patreon</li>
-            <li>Log Out</li>
+            <li (click)="logout()">Log Out</li>
         </ul>
     </div>
 </div>
@@ -48,7 +48,7 @@
                 <li (click)="handleRoutes(['admin-dash'])">Home</li>
                 <li (click)="handleRoutes(['admin-dash/app-stats'])">App-stats</li>
                 <li (click)="handleRoutes(['admin-dash/admin-feedback'])">Feedback</li>
-                <li>Log Out</li>
+                <li (click)="logout()">Log Out</li>
             </ul>
         </nav>
     </header>
@@ -58,7 +58,7 @@
             <li (click)="handleRoutes(['admin-dash'])">Home</li>
             <li (click)="handleRoutes(['admin-dash/app-stats'])">App-stats</li>
             <li (click)="handleRoutes(['admin-dash/admin-feedback'])">Feedback</li>
-            <li>Log Out</li>
+            <li (click)="logout()">Log Out</li>
         </ul>
     </div>
 </div>
