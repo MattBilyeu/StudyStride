@@ -15,7 +15,7 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'Studystride';
   hideMobileNav: boolean = true;
   alert: string;
-  role: string = 'User'
+  role: string
 
   constructor(public dataService: DataService,
               private router: Router) {}
@@ -27,7 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.routerSubscription = this.dataService.routerService.subscribe(routes => {
       this.handleRoutes(routes)
     });
-    this.roleSubscription = this.dataService.role.subscribe(role => this.role = role)
+    this.roleSubscription = this.dataService.role.subscribe(role => this.role = role);
   }
 
   handleRoutes(routes: string[]) {
@@ -35,7 +35,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   handleMessage(message: string) {
-    this.alert === message;
+    this.alert = message;
     setTimeout(()=> {
       this.alert = undefined
     }, 2000)
@@ -54,8 +54,14 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.messageSubscription.unsubscribe();
-    this.routerSubscription.unsubscribe();
-    this.roleSubscription.unsubscribe()
+    if (this.messageSubscription) {
+      this.messageSubscription.unsubscribe();
+    }
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+    if (this.roleSubscription) {
+      this.roleSubscription.unsubscribe();
+    }
   }
 }

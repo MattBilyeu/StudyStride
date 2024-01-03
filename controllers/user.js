@@ -30,9 +30,8 @@ function resolveMilestones(oldArray, newArray) {
                 return stats.save()
             })
             .catch(err => {
-                const error = new Error(err);
-                error.status(500);
-                next(error)
+                console.log(err);
+                res.status(500).json({message: 'Internal server error.'})
             })
     }
 }
@@ -41,13 +40,11 @@ exports.createUser = (req, res, next) => {
     const name = req.body.name;
     const email = req.body.email.toLowerCase();
     const password = req.body.password;
-    let foundUser;
     User.findOne({email: email})
         .then(user => {
             if (user) {
                 return res.status(422).json({message: 'A user with that email already exists.'})
             } else {
-                foundUser = user;
                 bcrypt.hash(password, 12)
                     .then(hashedPassword => {
                         const futureTimeStamp = Date() + (30 * 24 * 60 * 60 * 1000);
@@ -58,6 +55,7 @@ exports.createUser = (req, res, next) => {
                             password: hashedPassword,
                             createDate: new Date(),
                             receivesEmails: true,
+                            totalTime: 0,
                             topics: [],
                             activeSession: null,
                             milestones: [],
@@ -71,11 +69,10 @@ exports.createUser = (req, res, next) => {
                             return res.status(201).json({message: 'User Created.', user: newUser})
                         })
                     })
-                .catch(err => {
-                    const error = new Error(err);
-                    error.status(500);
-                    next(error)
-                })
+                    .catch(err => {
+                        console.log(err);
+                        res.status(500).json({message: 'Internal server error.'})
+                    })
             }
         })
         .catch(err => {
@@ -92,7 +89,7 @@ exports.updateEmail = (req, res, next) => {
     let foundUser;
     User.findOne({email: oldEmail})
         .then(user => {
-            if (!user || user._id.toString() !== req.session._id.toString()) {
+            if (!user || user._id.toString() !== req.session.userId.toString()) {
                 return res.status(422).json({message: 'The reset email you used is no longer valid, please submit a new request.'})
             } else {
                 foundUser = user;
@@ -118,16 +115,14 @@ exports.updateEmail = (req, res, next) => {
                         }
                     })
                     .catch(err => {
-                        const error = new Error(err);
-                        error.status(500);
-                        next(error)
+                        console.log(err);
+                        res.status(500).json({message: 'Internal server error.'})
                     })
             }
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
@@ -168,9 +163,8 @@ exports.sendPassUpdate = (req, res, next) => {
             }
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
@@ -201,15 +195,14 @@ exports.updatePassword = (req, res, next) => {
             }
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
 exports.updateMilestones = (req, res, next) => {
     const newMilestones = req.body.milestones;
-    User.findById(req.session._id)
+    User.findById(req.session.userId)
         .then(user => {
             if (!user) {
                 return res.status(404).json({message: 'User not found.'})
@@ -221,22 +214,20 @@ exports.updateMilestones = (req, res, next) => {
                         return res.status(200).json({message: 'Milestones updated.', user: updatedUser})
                     })
                     .catch(err => {
-                        const error = new Error(err);
-                        error.status(500);
-                        next(error)
+                        console.log(err);
+                        res.status(500).json({message: 'Internal server error.'})
                     })
             }
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
 exports.createTopic = (req, res, next) => {
     const title = req.body.title;
-    User.findById(req.session._id)
+    User.findById(req.session.userId)
         .then(user => {
             if (!user) {
                 return res.status(404).json({message: 'User not found.'})
@@ -252,21 +243,19 @@ exports.createTopic = (req, res, next) => {
                         return res.status(201).json({message: 'New topic created.', user: updatedUser})
                     })
                     .catch(err => {
-                        const error = new Error(err);
-                        error.status(500);
-                        next(error)
+                        console.log(err);
+                        res.status(500).json({message: 'Internal server error.'})
                     })
             }
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
 exports.deleteTopic = (req, res, next) => {
-    User.findById(req.session._id)
+    User.findById(req.session.userId)
         .then(user => {
             if (!user) {
                 return res.status(404).json({message: 'User not found.'})
@@ -284,16 +273,14 @@ exports.deleteTopic = (req, res, next) => {
                         return res.status(200).json({message: 'Topic deleted.', user: updatedUser})
                     })
                     .catch(err => {
-                        const error = new Error(err);
-                        error.status(500);
-                        next(error)
+                        console.log(err);
+                        res.status(500).json({message: 'Internal server error.'})
                     })
             }
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
@@ -322,22 +309,19 @@ exports.startSession = (req, res, next) => {
                                 stats.save();
                             })
                             .catch(err => {
-                                const error = new Error(err);
-                                error.status(500);
-                                next(error)
+                                console.log(err);
+                                res.status(500).json({message: 'Internal server error.'})
                             })
                     })
                     .catch(err => {
-                        const error = new Error(err);
-                        error.status(500);
-                        next(error)
+                        console.log(err);
+                        res.status(500).json({message: 'Internal server error.'})
                     })
             }
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
@@ -381,9 +365,8 @@ exports.endSession = (req, res, next) => {
                                 })
                         })
                         .catch(err => {
-                            const error = new Error(err);
-                            error.status(500);
-                            next(error)
+                            console.log(err);
+                            res.status(500).json({message: 'Internal server error.'})
                         })
                 } else {
                     user.save()
@@ -391,9 +374,8 @@ exports.endSession = (req, res, next) => {
                             return res.status(200).json({message: 'Session ended.', user: updatedUser})
                         })
                         .catch(err => {
-                            const error = new Error(err);
-                            error.status(500);
-                            next(error)
+                            console.log(err);
+                            res.status(500).json({message: 'Internal server error.'})
                         })
                 };
                 Stats.findOne()
@@ -402,16 +384,14 @@ exports.endSession = (req, res, next) => {
                         stats.save()
                     })
                     .catch(err => {
-                        const error = new Error(err);
-                        error.status(500);
-                        next(error)
+                        console.log(err);
+                        res.status(500).json({message: 'Internal server error.'})
                     })
             }
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
@@ -434,17 +414,15 @@ exports.seedTime = (req, res, next) => {
                             return res.status(200).json({message: 'Time seeded.', user: updatedUser})
                         })
                         .catch(err => {
-                            const error = new Error(err);
-                            error.status(500);
-                            next(error)
+                            console.log(err);
+                            res.status(500).json({message: 'Internal server error.'})
                         })
                 }
             }
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
@@ -460,16 +438,14 @@ exports.toggleReceiveEmails = (req, res, next) => {
                         return res.status(200).json({message: 'User updated.', user: updatedUser})
                     })
                     .catch(err => {
-                        const error = new Error(err);
-                        error.status(500);
-                        next(error)
+                        console.log(err);
+                        res.status(500).json({message: 'Internal server error.'})
                     })
             }
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
@@ -484,9 +460,8 @@ exports.deleteUser = (req, res, next) => {
             }
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
@@ -494,9 +469,8 @@ exports.getStatsObject = (req, res, next) => {
     Stats.findOne()
         .then(statsObj => res.status(200).json({stats: statsObj}))
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
@@ -510,9 +484,8 @@ exports.getActiveUserCount = (req, res, next) => {
             return res.status(200).json({allUsers: users.length, activeUsers: activeUsers.length})
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
@@ -530,8 +503,7 @@ exports.renderBadge = (req, res, next) => {
             })
         })
         .catch(err => {
-            const error = new Error(err);
-            error.httpStatusCode = 404;
-            return next(error);
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }

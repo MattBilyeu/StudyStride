@@ -1,12 +1,13 @@
 const mongoURI = require('./util/protected').mongoURI;
 const path = require('path');
 
-const stats = require('./models/stats');
+const Stats = require('./models/stats');
 
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const secret = require('./util/protected').secret;
 const MongoDBStore = require('connect-mongodb-session')(session);
 const helmet = require('helmet');
 const compression = require('compression');
@@ -31,7 +32,7 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
-    secret: 'stridestudy secret code',
+    secret: secret,
     resave: false,
     saveUninitialized: false,
     store: store
@@ -43,11 +44,6 @@ app.use('/user', userRoutes);
 app.use('/badge', badgeRoutes);
 
 app.get('**', (req, res, next)=> {res.sendFile(path.join(__dirname, 'public', 'index.html'))});
-
-app.use((error, req, res, next) => {
-    console.log(error);
-    res.status(404).json(error);
-});
 
 Stats.findOne().then(stats => {
     if (!stats) {

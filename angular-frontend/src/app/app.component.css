@@ -1,3 +1,5 @@
+@import '../styles.css';
+
 header nav.desktop {
     display: none
 }
@@ -73,7 +75,9 @@ header nav.mobile .hamburger div {
     color: var(--secondary-background);
     font-weight: bold;
     font-size: large;
-    opacity: 0.8
+    opacity: 0.8;
+    padding: 1rem;
+    text-align: center
 }
 
 @media screen and (min-width: 768px) {

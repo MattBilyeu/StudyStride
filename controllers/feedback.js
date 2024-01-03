@@ -23,11 +23,9 @@ exports.createFeedback = (req, res, next) => {
             }
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
-
 }
 
 exports.deleteFeedback = (req, res, next) => {
@@ -40,10 +38,9 @@ exports.deleteFeedback = (req, res, next) => {
         }
     })
     .catch(err => {
-        const error = new Error(err);
-        error.status(500);
-        next(error)
-    }) 
+        console.log(err);
+        res.status(500).json({message: 'Internal server error.'})
+    })
 }
 
 exports.emailSender = (req, res, next) => {
@@ -62,9 +59,8 @@ exports.emailSender = (req, res, next) => {
             }
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
@@ -78,8 +74,7 @@ exports.getFeedback = (req, res, next) => {
             }
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }

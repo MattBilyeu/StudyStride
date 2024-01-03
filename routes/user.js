@@ -34,3 +34,5 @@ router.post('/delete', userController.deleteUser);
 router.post('/getStatsObject', userController.getStatsObject);
 
 router.post('/getActiveUsers', userController.getActiveUserCount);
+
+module.exports = router

@@ -4,6 +4,6 @@
     <button type="submit">Create Topic</button>
 </form>
 <!-- <app-topic-stats-detail *ngFor="let text of texts; let i = index" [ngClass]="{'secondary-background': i % 2 === 0}"></app-topic-stats-detail> -->
-<div class="statsContainer">
+<div class="statsContainer" *ngIf="topicObjs.length > 0">
     <app-topic-stats-detail (updated)="initializeComponent()"></app-topic-stats-detail>
 </div>

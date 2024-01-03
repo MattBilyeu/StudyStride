@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { DataService } from '../../service/data.service';
 import { HttpService } from '../../service/http.service';
+import { Response } from '../../models/response.model';
 
 interface Timestamp {
   stamp: Date;
@@ -34,6 +35,12 @@ export class TopicStatsComponent implements OnInit {
   }
 
   createTopic(form: NgForm) {
-    console.log(form.value.newTopic)
+    this.http.createTopic(form.value.newTopic).subscribe((response: Response) => {
+      this.dataService.message.next(response.message);
+      if (response.user) {
+        this.dataService.user = response.user;
+        this.initializeComponent()
+      }
+    })
   }
 }

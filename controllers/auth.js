@@ -18,23 +18,21 @@ exports.userLogin = (req, res, next) => {
                         if (!domatch) {
                             return res.status(422).json({message: 'Password and Email Combination Not Found'})
                         } else {
-                            req.session._id = foundUser._id.toString();
+                            req.session.userId = foundUser._id.toString();
                             req.session.role = 'member';
                             foundUser.password = 'redacted';
-                            return res.status(200).json({foundUser})
+                            return res.status(200).json({message: 'login successful', user: foundUser})
                         }
                     })
                     .catch(err => {
-                        const error = new Error(err);
-                        error.status(500);
-                        next(error)
+                        console.log(err);
+                        res.status(500).json({message: 'Internal server error.'})
                     })
             }
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
@@ -56,19 +54,17 @@ exports.adminLogin = (req, res, next) => {
                             req.session._id = foundUser._id.toString();
                             req.session.role = 'admin';
                             foundUser.password = 'redacted';
-                            return res.status(200).json({foundUser})
+                            return res.status(200).json({message: 'login successful', user: foundUser})
                         }
                     })
                     .catch(err => {
-                        const error = new Error(err);
-                        error.status(500);
-                        next(error)
+                        console.log(err);
+                        res.status(500).json({message: 'Internal server error.'})
                     })
             }
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }

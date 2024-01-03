@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../service/http.service';
 import { DataService } from '../service/data.service';
 import { NgForm } from '@angular/forms';
-import { User } from '../models/user.model';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Response } from '../models/response.model';
 
 @Component({
@@ -16,7 +16,7 @@ export class UserloginComponent implements OnInit {
               private dataService: DataService) {}
 
   ngOnInit() {
-
+    this.autoLogin();
   }
 
   //Looks in local storage for loginData, logs in with it if it is found.
@@ -27,9 +27,10 @@ export class UserloginComponent implements OnInit {
     } else {
       this.http.userLogin(loginData.email, loginData.password)
         .subscribe((response: Response)=> {
-          this.dataService.role.next('User');
           this.dataService.user = response.user;
-          this.dataService.routerService.next(['user-dash'])
+          this.dataService.role.next('user');
+          this.dataService.loggedIn = true;
+          this.dataService.routerService.next(['user'])
         });
       return true
     }
@@ -43,14 +44,22 @@ export class UserloginComponent implements OnInit {
     this.http.userLogin(form.value.email.toLowerCase(), form.value.password)
       .subscribe((response: Response) => {
         if (!response.user) {
+          console.log('failed login, response: ', response);
+          this.dataService.message.next('failed login');
           return this.dataService.message.next(response.message)
         } else {
-          this.dataService.user = response.user
+          this.dataService.user = response.user;
+          this.dataService.role.next('user');
+          this.dataService.loggedIn = true;
+          this.dataService.routerService.next(['user'])
         };
         let loginData = {email: form.value.email.toLowerCase(), password: form.value.password};
         localStorage.setItem('loginData', JSON.stringify(loginData));
-        this.dataService.role.next('User');
-        this.dataService.routerService.next(['user-dash'])
+        this.dataService.role.next('user');
+        this.dataService.routerService.next(['user'])
+      }, (error: HttpErrorResponse) => {
+        console.log(error);
+        this.dataService.message.next(error.error.message);
       })
   }
 

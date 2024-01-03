@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { DataService } from '../../../service/data.service';
 import { HttpService } from '../../../service/http.service';
 import { User } from '../../../models/user.model';
@@ -23,10 +23,10 @@ interface PastProgressObj {
   templateUrl: './session.component.html',
   styleUrls: ['./session.component.css']
 })
-export class SessionComponent implements OnInit, OnDestroy {
+export class SessionComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('topic') topic!: ElementRef<HTMLSelectElement>;
   user: User;
-  sessionRunning: Boolean = false;
+  sessionRunning: boolean = false;
   sessionTopic: string;
   sessionTimeStudied: string;
   hoursToNextBadge: Number;
@@ -46,25 +46,32 @@ export class SessionComponent implements OnInit, OnDestroy {
               private http: HttpService) {}
 
   ngOnInit() {
-    this.initializeComponent()
+    this.initializeComponent();
+  }
+
+  ngAfterViewInit() {
+    if (this.topics.length !== 0) {
+      this.topic.nativeElement.value = this.topics[0] //For convenience, sets the select to a topic so that the user can start a session with one click.
+    }
   }
 
   //Gets the user object from the dataService, if the user has an active session then it passes that session off to the handler function.
   //Sets the topics array to the topics the user has created.
   //Sets times for the past progress property for the all time numbers, calls the handler to get the last 30 properties since the math for them is more complicated.
   initializeComponent() {
+    console.log(typeof this.dataService.user.createDate);
     this.user = this.dataService.user;
     if (this.user.activeSession) {
       this.handleSessionObj(this.user.activeSession);
     };
-    this.topics = this.user.topics.map(topicObj => topicObj.topic);
-    if (this.topics.length !== 0) {
-      this.topic.nativeElement.value = this.topics[0] //For convenience, sets the select to a topic so that the user can start a session with one click.
+    if (this.user.topics.length > 0) {
+      this.topics = this.user.topics.map(topicObj => topicObj.topic);
+      this.pastProgress.allTimeHrsStudied = +this.user.totalTime;
+      this.pastProgress.allTimeBadgesEarned = this.user.badges.length;
+      const date = new Date(this.user.createDate);
+      let weeksElapsed = (date.getTime() - Date.now())/(1000 * 60 * 60 * 24 * 7);
+      this.pastProgress.allTimeHrsPerWeek = Number((+this.user.totalTime/weeksElapsed).toFixed(2))
     }
-    this.pastProgress.allTimeHrsStudied = +this.user.totalTime;
-    this.pastProgress.allTimeBadgesEarned = this.user.badges.length;
-    let weeksElapsed = (this.user.createDate.getTime() - Date.now())/(1000 * 60 * 60 * 24 * 7);
-    this.pastProgress.allTimeHrsPerWeek = Number((+this.user.totalTime/weeksElapsed).toFixed(2))
   }
 
   //Sets the session topic - for use with the endSession function.
@@ -73,8 +80,9 @@ export class SessionComponent implements OnInit, OnDestroy {
   handleSessionObj(session: ActiveSession) {
     this.sessionTopic = session.topic;
     this.sessionRunning = true;
-    let now = new Date();
-    let currentDuration = now.getTime() - session.start.getTime();
+    const now = new Date();
+    const sessionStart = new Date(session.start);
+    let currentDuration = now.getTime() - sessionStart.getTime();
     currentDuration = Math.floor(currentDuration / (60 * 1000));
     if (currentDuration < 60) {
       this.sessionTimeStudied = `${currentDuration} mins`
@@ -87,7 +95,7 @@ export class SessionComponent implements OnInit, OnDestroy {
     }
     this.intervalId = setInterval(()=> {
       let now = new Date();
-      let currentDuration = now.getTime() - session.start.getTime();
+      let currentDuration = now.getTime() - sessionStart.getTime();
       currentDuration = Math.floor(currentDuration / (60 * 1000));
       if (currentDuration < 60) {
         this.sessionTimeStudied = `${currentDuration} mins`
@@ -104,7 +112,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   //Checks if a topic was selected, alerts the user if not.
   //If a topic was selected, 
   startSession() {
-    if (this.topic) {
+    if (this.topic.nativeElement.value !== '') {
       const topicValue = this.topic.nativeElement.value;
       this.http.startSession(topicValue).subscribe((response: Response) => {
         this.dataService.message.next(response.message);

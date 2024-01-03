@@ -18,10 +18,12 @@ router.post('/emailAll', adminController.emailAllUsers);
 
 router.post('/getAllAdmins', adminController.getAllAdmins);
 
-router.post('/ban', adminController.banUser);
+router.post('/ban', adminController.toggleBanUser);
 
 router.post('/getFeedback', feedbackController.getFeedback);
 
 router.post('/deleteFeedback', feedbackController.deleteFeedback);
 
 router.post('/emailSender', feedbackController.emailSender);
+
+module.exports = router

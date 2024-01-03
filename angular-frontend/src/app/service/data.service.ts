@@ -7,28 +7,10 @@ import { Feedback } from '../models/feedback.model';
   providedIn: 'root'
 })
 export class DataService {
-  user: User = {
-    name: 'Fred',
-    email: 'String',
-    password: 'redacted',
-    createDate: new Date(),
-    receivesEmails: true,
-    totalTime: 400,
-    topics: [{
-      topic: 'Test',
-      timestamps: [{
-        stamp: new Date(),
-        duration: 1000
-      }]
-    }],
-    milestones: [],
-    userActiveUntil: new Date(),
-    badges: [],
-    banned: false
-  };
+  user: User;
   message = new Subject<string>();
   routerService = new Subject<string[]>();
-  loggedIn: Boolean = true;
+  loggedIn: Boolean = false;
   role = new Subject<string>();
   feedbacks: Feedback[]
   

@@ -23,7 +23,7 @@ export class User {
     name: string;
     email: string;
     password: string;
-    createDate: Date;
+    createDate: string;
     receivesEmails: Boolean;
     totalTime: Number;
     topics: TopicObj[];

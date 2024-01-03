@@ -23,6 +23,10 @@ h1 {
     gap: 1rem;
 }
 
+.sessionContainer p {
+    text-align: center
+}
+
 .pastProgressContainer {
     padding: 1rem;
     display: grid;

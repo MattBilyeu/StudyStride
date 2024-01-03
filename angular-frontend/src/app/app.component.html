@@ -1,4 +1,4 @@
-<div class="admin" *ngIf="role === 'User'">
+<div class="admin" *ngIf="role === 'user'">
     <header>
         <nav class="mobile">
             <img src="../assets/studystride.png" alt="Studystride Logo">
@@ -20,7 +20,7 @@
             </ul>
         </nav>
     </header>
-    <div class="mobileBackdrop"></div>
+    <div class="mobileBackdrop" [ngClass]="{hidden: hideMobileNav}"></div>
     <div class="mobileNavButtons" [ngClass]="{hidden: hideMobileNav}" (click)="toggleMobileNav()">
         <ul>
             <li (click)="handleRoutes(['user'])">Home</li>
@@ -32,7 +32,7 @@
         </ul>
     </div>
 </div>
-<div class="user" *ngIf="role === 'Admin'">
+<div class="user" *ngIf="role === 'admin'">
     <header>
         <nav class="mobile">
             <img src="../assets/studystride.png" alt="Studystride Logo">
@@ -63,8 +63,7 @@
     </div>
 </div>
 
-
-<div class="alert" *ngIf="alert">
+<div class="alert" [ngClass]="{hidden: !alert}">
     <p>{{ alert }}</p>
 </div>
 <div [ngClass]="{hidden: !hideMobileNav}">

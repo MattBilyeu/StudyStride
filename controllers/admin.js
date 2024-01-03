@@ -25,9 +25,8 @@ exports.createAdmin = (req, res, next) => {
                     res.status(201).json({message: 'New admin created.'})
                 })
                 .catch(err => {
-                    const error = new Error(err);
-                    error.status(500);
-                    next(error)
+                    console.log(err);
+                    res.status(500).json({message: 'Internal server error.'})
                 })
         })
 }
@@ -61,17 +60,15 @@ exports.sendAdminPassUpdate = (req, res, next) => {
                         res.status(200).json({message: 'Password Reset Sent - Please check your email.'})
                         })
                         .catch(err => {
-                            const error = new Error(err);
-                            error.status(500);
-                            next(error)
+                            console.log(err);
+                            res.status(500).json({message: 'Internal server error.'})
                         })
                 })
             }
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
@@ -102,9 +99,8 @@ exports.updateAdminPassword = (req, res, next) => {
             }
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
@@ -119,9 +115,8 @@ exports.emailAllUsers = (req, res, next) => {
             return res.status(200).json({message: 'Emails sent.'})
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
@@ -139,9 +134,8 @@ exports.getAllAdmins = (req, res, next) => {
             res.status(200).response({message: 'All admins provided.', allAdmins: adminArray})
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
@@ -154,9 +148,8 @@ exports.deleteAdmin = (req, res, next) => {
             res.status(200).json({message: 'Admin deleted.'})
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
 
@@ -172,14 +165,12 @@ exports.toggleBanUser = (req, res, next) => {
                     res.status(200).json({message: 'User updated.', user: updatedUser})
                 })
                 .catch(err => {
-                    const error = new Error(err);
-                    error.status(500);
-                    next(error)
+                    console.log(err);
+                    res.status(500).json({message: 'Internal server error.'})
                 })
         })
         .catch(err => {
-            const error = new Error(err);
-            error.status(500);
-            next(error)
+            console.log(err);
+            res.status(500).json({message: 'Internal server error.'})
         })
 }
