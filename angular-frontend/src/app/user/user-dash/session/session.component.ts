@@ -59,18 +59,28 @@ export class SessionComponent implements OnInit, OnDestroy, AfterViewInit {
   //Sets the topics array to the topics the user has created.
   //Sets times for the past progress property for the all time numbers, calls the handler to get the last 30 properties since the math for them is more complicated.
   initializeComponent() {
-    console.log(typeof this.dataService.user.createDate);
     this.user = this.dataService.user;
     if (this.user.activeSession) {
       this.handleSessionObj(this.user.activeSession);
     };
     if (this.user.topics.length > 0) {
       this.topics = this.user.topics.map(topicObj => topicObj.topic);
-      this.pastProgress.allTimeHrsStudied = +this.user.totalTime;
+      this.pastProgress.allTimeHrsStudied = Math.floor((+this.user.totalTime)/60);
       this.pastProgress.allTimeBadgesEarned = this.user.badges.length;
-      const date = new Date(this.user.createDate);
-      let weeksElapsed = (date.getTime() - Date.now())/(1000 * 60 * 60 * 24 * 7);
-      this.pastProgress.allTimeHrsPerWeek = Number((+this.user.totalTime/weeksElapsed).toFixed(2))
+      const userCreated = new Date(this.user.createDate);
+      let weeksElapsed = (Date.now() - userCreated.getTime())/(1000 * 60 * 60 * 24 * 7);
+      this.pastProgress.allTimeHrsPerWeek = +(Math.floor((+this.user.totalTime)/60)/weeksElapsed).toFixed(2)
+    };
+    if (this.topics.length > 0) {
+      let accumulatedMinutes = 0;
+      for (let i = 0; i < this.user.topics.length; i++) { //Iterates over every topic
+        const targetTopic = this.user.topics[i];
+        if (targetTopic.timestamps.length > 0) { //Checks if the topic has timestamps
+          targetTopic.timestamps.forEach(stampObj => accumulatedMinutes += +stampObj.duration) //Adds the duration from each timestamp to the accumulated minutes
+        }
+      };
+      this.hoursToNextBadge = 10 - +((+accumulatedMinutes/60) % 10).toFixed(2) //Converts the accumulated minutes to hours and then returns the number of hours left until the next 10 hour breakpoint (badge)
+      this.percentToBadge = Math.floor((+this.hoursToNextBadge/10)*100)
     }
   }
 

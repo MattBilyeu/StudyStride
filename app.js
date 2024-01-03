@@ -51,7 +51,8 @@ Stats.findOne().then(stats => {
             totalTimeStamps: 0,
             milestonesCreated: 0,
             totalStudyTime: 0
-        })
+        });
+        statsObj.save()
     }
 }).catch()
 

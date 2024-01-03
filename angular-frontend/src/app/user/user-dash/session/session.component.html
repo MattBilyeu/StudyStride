@@ -12,8 +12,8 @@
         <h2 class="six">{{ percentToBadge }}%</h2>
         <!-- Row 2 End -->
     </div>
-    <p *ngIf="topics.length === 0">Please create a topic in the topic-stats page in order to start a session.</p>
-    <p *ngIf="sessionRunning">Session running...</p>
+    <p class="centered" *ngIf="topics.length === 0">Please create a topic in the topic-stats page in order to start a session.</p>
+    <p class="centered" *ngIf="sessionRunning">Session running...</p>
     <div class="sessionControls">
         <select *ngIf="topics.length !== 0" name="topic" #topic>
             <option [value]="topic" *ngFor="let topic of topics">{{ topic }}</option>

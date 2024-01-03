@@ -334,16 +334,17 @@ exports.endSession = (req, res, next) => {
                 return res.status(404).json({message: 'An active session was not found'})
             } else {
                 user = foundUser;
-                const stopTime = Date();
-                const duration = (stopTime - user.activeSession.start)/(1000 * 60);
+                const stopTime = new Date();
+                const startTime = new Date(user.activeSession.start)
+                const duration = (stopTime.getTime() - startTime.getTime())/(1000 * 60);
                 dur = duration;     //Results in the total duration of time spent studying this session.
-                user.activeSession = null;
                 const index = user.topics.findIndex(topicObj => topicObj.topic === user.activeSession.topic);
                 if (index !== -1) {
-                    user.totalTime += duration;
+                    user.totalTime += +duration;
                     const timeStampObj = {stamp: stopTime, duration: duration};
                     user.topics[index].timestamps.push(timeStampObj);   //Saves the user's study session to their topic's timestamps array.
                 };
+                user.activeSession = null;
                 if (Math.floor(user.totalTime/60) > (user.badges.length * 10)) {   //Compares the total study time to the number of badges the user has earned to see if they have earned a new badge.
                     const newBadge = new Badge({    //The user earns a new badge ever 10 hours, so they are given a new badge if they have 10 hours more study time than 10*number of badges.
                         owner: user._id,
