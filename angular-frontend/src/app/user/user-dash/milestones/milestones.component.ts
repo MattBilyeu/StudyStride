@@ -41,6 +41,7 @@ export class MilestonesComponent implements OnInit {
   }
 
   completeMilestone(index: number) {
+    this.activeMilestones[index].completed = true;
     this.completedMilestones.push(this.activeMilestones[index]);
     this.activeMilestones.splice(index, 1)
   }
@@ -59,6 +60,8 @@ export class MilestonesComponent implements OnInit {
       this.dataService.message.next(response.message);
       if (response.user) {
         this.dataService.user = response.user;
+        this.activeMilestones = [];
+        this.completedMilestones = [];
         this.initializeComponent()
       }
     })

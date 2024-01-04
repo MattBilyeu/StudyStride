@@ -60,28 +60,55 @@ export class SessionComponent implements OnInit, OnDestroy, AfterViewInit {
   //Sets times for the past progress property for the all time numbers, calls the handler to get the last 30 properties since the math for them is more complicated.
   initializeComponent() {
     this.user = this.dataService.user;
+    this.pastProgress.allTimeBadgesEarned = this.user.badges.length;
     if (this.user.activeSession) {
       this.handleSessionObj(this.user.activeSession);
     };
     if (this.user.topics.length > 0) {
       this.topics = this.user.topics.map(topicObj => topicObj.topic);
-      this.pastProgress.allTimeHrsStudied = Math.floor((+this.user.totalTime)/60);
-      this.pastProgress.allTimeBadgesEarned = this.user.badges.length;
-      const userCreated = new Date(this.user.createDate);
-      let weeksElapsed = (Date.now() - userCreated.getTime())/(1000 * 60 * 60 * 24 * 7);
-      this.pastProgress.allTimeHrsPerWeek = +(Math.floor((+this.user.totalTime)/60)/weeksElapsed).toFixed(2)
-    };
-    if (this.topics.length > 0) {
-      let accumulatedMinutes = 0;
-      for (let i = 0; i < this.user.topics.length; i++) { //Iterates over every topic
-        const targetTopic = this.user.topics[i];
-        if (targetTopic.timestamps.length > 0) { //Checks if the topic has timestamps
-          targetTopic.timestamps.forEach(stampObj => accumulatedMinutes += +stampObj.duration) //Adds the duration from each timestamp to the accumulated minutes
-        }
-      };
-      this.hoursToNextBadge = 10 - +((+accumulatedMinutes/60) % 10).toFixed(2) //Converts the accumulated minutes to hours and then returns the number of hours left until the next 10 hour breakpoint (badge)
-      this.percentToBadge = Math.floor((+this.hoursToNextBadge/10)*100)
+      this.processAllTimeStats(this.user);
+      this.processBadgeStats(this.user);
+      this.processLast30Stats(this.user)
     }
+  }
+
+  processAllTimeStats(user: User) {
+    this.pastProgress.allTimeHrsStudied = Math.floor((+user.totalTime)/60);
+    const userCreated = new Date(user.createDate);
+    let weeksElapsed = (Date.now() - userCreated.getTime())/(1000 * 60 * 60 * 24 * 7);
+    this.pastProgress.allTimeHrsPerWeek = Math.round(+(Math.floor((+this.user.totalTime)/60)/weeksElapsed)*100)/100
+  }
+
+  processBadgeStats(user: User) {
+    let accumulatedMinutes = 0;
+    for (let i = 0; i < user.topics.length; i++) { //Iterates over every topic
+      const targetTopic = user.topics[i];
+      if (targetTopic.timestamps.length > 0) { //Checks if the topic has timestamps
+        targetTopic.timestamps.forEach(stampObj => accumulatedMinutes += +stampObj.duration) //Adds the duration from each timestamp to the accumulated minutes
+      }
+    };
+    const remainingMinutes = (10*60) - (accumulatedMinutes % (10*60)); //Finds the uncompleted portion of the minutes in a badge (10*60)
+    this.hoursToNextBadge =  Math.round((remainingMinutes/60)*100)/100 //Converts the remaining minutes to hours and then rounds to the nearest 100ths place
+    this.percentToBadge = Math.floor((+this.hoursToNextBadge/10)*100)
+  }
+
+  //Sets a start date equal to 30 days ago, iterates through each topic and adds up the durations if their stamp is after the start date, 
+  //then converts those minutes to hours for the last30Hrs and last30HrsPerWeek
+  processLast30Stats(user: User) {
+    const startDate = Date.now() - (1000 * 60 * 60 * 24 * 30);
+    let accumulatedMinutes = 0;
+    user.topics.forEach(topicObj => {
+      if (topicObj.timestamps.length > 0) {
+        for (let i = 0; i < topicObj.timestamps.length; i++) {
+          const stampDate = new Date(topicObj.timestamps[i].stamp)
+          if (stampDate.getTime() > startDate) {
+            accumulatedMinutes += +topicObj.timestamps[i].duration
+          }
+        }
+      }
+    });
+    this.pastProgress.last30HrsStudied = Math.round(+Math.floor(accumulatedMinutes/60)*100)/100;
+    this.pastProgress.last30HrsPerWeek = Math.round((this.pastProgress.last30HrsStudied * (30/7))*100)/100;
   }
 
   //Sets the session topic - for use with the endSession function.
@@ -110,10 +137,8 @@ export class SessionComponent implements OnInit, OnDestroy, AfterViewInit {
       if (currentDuration < 60) {
         this.sessionTimeStudied = `${currentDuration} mins`
       } else {
-        let hours;
-        let minutes;
-        hours = Math.floor(currentDuration/60);
-        minutes = Math.floor((currentDuration % 60));
+        let hours = Math.floor(currentDuration/60);
+        let minutes = Math.floor((currentDuration % 60));
         this.sessionTimeStudied = `${hours} hrs ${minutes} mins`;
       }
     }, (60 * 1000))
@@ -145,6 +170,8 @@ export class SessionComponent implements OnInit, OnDestroy, AfterViewInit {
       this.dataService.message.next(response.message);
       if (response.user) {
         this.dataService.user = response.user;
+        this.sessionRunning = false;
+        clearInterval(this.intervalId);
         this.initializeComponent();
       }
     })

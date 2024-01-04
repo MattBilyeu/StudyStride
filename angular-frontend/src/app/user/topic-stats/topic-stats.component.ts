@@ -31,6 +31,7 @@ export class TopicStatsComponent implements OnInit {
 
   //Separated so that it could be activated by a sub-component's emitted event.
   initializeComponent() {
+    this.topicObjs = [];
     this.topicObjs = this.dataService.user.topics;
   }
 

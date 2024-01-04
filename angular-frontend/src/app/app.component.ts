@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from './service/data.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AutoLoginService } from './service/auto-login.service';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,9 @@ export class AppComponent implements OnInit, OnDestroy {
   role: string
 
   constructor(public dataService: DataService,
-              private router: Router) {}
+              private router: Router,
+              private route: ActivatedRoute,
+              private autoLogin: AutoLoginService) {}
 
   ngOnInit() {
     this.messageSubscription = this.dataService.message.subscribe(message => {
@@ -28,6 +31,12 @@ export class AppComponent implements OnInit, OnDestroy {
       this.handleRoutes(routes)
     });
     this.roleSubscription = this.dataService.role.subscribe(role => this.role = role);
+    this.route.url.subscribe(segments => {
+      const hasAdmin = segments.filter(segment => segment.toString() == 'admin');
+      if (hasAdmin.length !== 0) {
+        this.autoLogin.autoLogin();
+      }
+    })
   }
 
   handleRoutes(routes: string[]) {
