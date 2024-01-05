@@ -9,7 +9,7 @@
             <input class="five" name="confirmEmail" type="email">
             <label for="password">Password:</label>
             <input type="password" name="password" ngModel required>
-            <button class="six" type="submit">Submit</button>
+            <button class="six" type="submit" [disabled]="!e.valid">Submit</button>
         </form>
         <form #s="ngForm" (ngSubmit)="seedTime(s)">
             <h1 class="one">Seed Study Time</h1>
@@ -17,10 +17,11 @@
             <select class="three" name="seedTopic" ngModel required>
                 <option *ngFor="let topic of topics" [value]="topic">{{ topic }}</option>
             </select>
-            <label class="four" name="seedTime" for="time">Add Time &#40;in mins&#41;:</label>
-            <input class="five" name="seedTime" type="number">
-            <button class="six" type="submit">Seed Time</button>
+            <label class="four" name="seedTime" for="time">Add/Subtract Time &#40;in mins&#41;:</label>
+            <input class="five" name="seedTime" type="number" ngModel required>
+            <button class="six" type="submit" [disabled]="!s.valid">Seed Time</button>
         </form>
+        <p class="smalltext centered">Seeding time is for minor adjustments!<br>-<br>Large changes will throw off your statistics<br>(seeded time will not affect badges)</p>
         <div class="toggle">
             <label for="toggleReceiveEmails">{{ receivesEmailsMess }}</label>
             <button (click)="toggleReceiveEmails()">Toggle</button>

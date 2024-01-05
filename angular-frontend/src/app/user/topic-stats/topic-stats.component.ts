@@ -40,6 +40,7 @@ export class TopicStatsComponent implements OnInit {
       this.dataService.message.next(response.message);
       if (response.user) {
         this.dataService.user = response.user;
+        form.value.newTopic = '';
         this.initializeComponent()
       }
     })

@@ -42,13 +42,20 @@ export class SettingsComponent implements OnInit {
   }
 
   seedTime(form: NgForm) {
-    this.http.seedTime(form.value.seedTime, form.value.seedTopic)
+    let conf = true;
+    if (form.value.seedTime > 180) {
+      let hours = Math.round((form.value.seedTime/60)*100)/100;
+      conf = confirm(`Are you sure you want to seed ${hours} hrs?  Seeding excessive time can permanently throw off your statistics.  Seeding is meant for minor adjustments (such as forgetting to start or stop the clock).`)
+    };
+    if (conf) {
+      this.http.seedTime(form.value.seedTime, form.value.seedTopic)
       .subscribe((response: Response) => {
         this.dataService.message.next(response.message);
         if (response.user) {
           this.dataService.user = response.user
         }
       })
+    }
   }
 
   toggleReceiveEmails() {

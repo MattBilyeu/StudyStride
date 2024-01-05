@@ -22,7 +22,7 @@
             <label for="mergeTopic">Merge Timestamps?</label>
             <select name="mergeTopic" ngModel required>
                 <option value="None">None</option>
-                <option *ngFor="let topic of topics" value="Topic 2">{{ topic }}</option>
+                <option *ngFor="let topic of topics" [value]="topic">{{ topic }}</option>
             </select>
         </div>
         <button class="delete" type="submit" [disabled]="!d.valid">Delete Topic</button>

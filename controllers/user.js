@@ -255,6 +255,7 @@ exports.createTopic = (req, res, next) => {
 }
 
 exports.deleteTopic = (req, res, next) => {
+    console.log(req.body);
     User.findById(req.session.userId)
         .then(user => {
             if (!user) {
@@ -345,11 +346,12 @@ exports.endSession = (req, res, next) => {
                     user.topics[index].timestamps.push(timeStampObj);   //Saves the user's study session to their topic's timestamps array.
                 };
                 user.activeSession = null;
-                if (Math.floor(user.totalTime/60) > (user.badges.length * 10)) {   //Compares the total study time to the number of badges the user has earned to see if they have earned a new badge.
+                const wholeHoursStudied = Math.floor(user.totalTime/60);
+                if (wholeHoursStudied > ((user.badges.length + 1) * 10)) {   //Compares the total study time to the number of badges the user has earned to see if they have earned a new badge.
                     const newBadge = new Badge({    //The user earns a new badge ever 10 hours, so they are given a new badge if they have 10 hours more study time than 10*number of badges.
                         owner: user._id,
                         ownerName: user.name,
-                        text: `${user.name} has earned a new badge!  That's another 10 hours spent studying.  Great work ${user.name}!  What dedication!`,
+                        text: `${user.name} has earned a new badge!  That's another 10 hours spent studying, for a total of ${wholeHoursStudied} hrs.  Great work ${user.name}!  What dedication!`,
                         dateEarned: formatDate(new Date())
                     });
                     newBadge.save()
@@ -405,10 +407,10 @@ exports.seedTime = (req, res, next) => {
                 return res.status(404).json({message: 'User not found.'})
             } else {
                 const index = user.topics.findIndex(topicObj => topicObj.topic === seedTopic);
-                if (index !== -1) {
+                if (index === -1) {
                     return res.status(404).json({message: `${seedTopic} was not found.`})
                 } else {
-                    const timestamp = {stamp: Date(), duration: seedTime};
+                    const timestamp = {stamp: new Date(), duration: seedTime};
                     user.topics[index].timestamps.push(timestamp);
                     user.save()
                         .then(updatedUser => {

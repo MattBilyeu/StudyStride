@@ -73,10 +73,15 @@ export class SessionComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   processAllTimeStats(user: User) {
-    this.pastProgress.allTimeHrsStudied = Math.floor((+user.totalTime)/60);
+    for (let i = 0; i < user.topics.length; i++) {//Iterates through each topic
+      for (let y = 0; y < user.topics[i].timestamps.length; y++) { //Iterates through each timestamp of that topic
+        this.pastProgress.allTimeHrsStudied += +user.topics[i].timestamps[y].duration //Adds the timestamp's duration to the total hrs
+      }
+    }
+    this.pastProgress.allTimeHrsStudied = Math.round(this.pastProgress.allTimeHrsStudied*100)/100;
     const userCreated = new Date(user.createDate);
     let weeksElapsed = (Date.now() - userCreated.getTime())/(1000 * 60 * 60 * 24 * 7);
-    this.pastProgress.allTimeHrsPerWeek = Math.round(+(Math.floor((+this.user.totalTime)/60)/weeksElapsed)*100)/100
+    this.pastProgress.allTimeHrsPerWeek = Math.round(+((+this.pastProgress.allTimeHrsStudied/60)/weeksElapsed)*100)/100
   }
 
   processBadgeStats(user: User) {
@@ -109,6 +114,7 @@ export class SessionComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     this.pastProgress.last30HrsStudied = Math.round(+Math.floor(accumulatedMinutes/60)*100)/100;
     this.pastProgress.last30HrsPerWeek = Math.round((this.pastProgress.last30HrsStudied * (30/7))*100)/100;
+    this.pastProgress.last30Badges = Math.floor(this.pastProgress.last30HrsStudied/10)
   }
 
   //Sets the session topic - for use with the endSession function.
