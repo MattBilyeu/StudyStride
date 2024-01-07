@@ -34,6 +34,7 @@ export class SessionComponent implements OnInit, AfterViewInit {
   percentToBadge: Number;
   topics: string[] = [];
   intervalId: any;
+  badgeUrl: string;
   pastProgress: PastProgressObj = {
     last7HrsStudied: 0,
     last30HrsStudied: 0,
@@ -62,6 +63,15 @@ export class SessionComponent implements OnInit, AfterViewInit {
   //Sets times for the past progress property for the all time numbers, calls the handler to get the last 30 properties since the math for them is more complicated.
   initializeComponent() {
     this.user = this.dataService.user;
+    if (this.user.badges.length > 0) {
+      setTimeout(()=> {
+        const index = this.user.badges.length -1;
+        this.badgeUrl = 'badge/' + this.user.badges[index];
+        setTimeout(()=> {
+          this.badgeUrl = undefined
+        }, 5000)
+      }, 2000)
+    };
     this.pastProgress.allTimeBadgesEarned = this.user.badges.length;
     if (this.user.activeSession) {
       this.handleSessionObj(this.user.activeSession);

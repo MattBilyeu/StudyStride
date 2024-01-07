@@ -45,3 +45,9 @@
     <h2 class="twelve">{{ pastProgress.allTimeBadgesEarned }}</h2>
     <!-- Row 3 End -->
 </div>
+<div class="badgeLink" *ngIf="badgeUrl">
+    <a [href]="badgeUrl" target="_blank">
+        <img src="./assets/studystride-badge-transparent.png" alt="Studystride Badge Logo">
+        <p>See your most recent badge!</p>
+    </a>
+</div>

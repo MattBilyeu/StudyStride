@@ -45,7 +45,7 @@ app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
 app.use('/badge', badgeRoutes);
 
-// app.get('**', (req, res, next)=> {res.sendFile(path.join(__dirname, 'public', 'index.html'))});
+app.get('**', (req, res, next)=> {res.sendFile(path.join(__dirname, 'public', 'index.html'))});
 
 Admin.findOne().then(admin => {
     if (!admin) {
