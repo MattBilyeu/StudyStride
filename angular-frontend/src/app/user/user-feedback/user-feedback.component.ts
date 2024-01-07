@@ -16,48 +16,17 @@ export class UserFeedbackComponent {
     toolbar: "numlist bullist link table",
     menubar: ""
   };
-  dangerousKeywords = [
-    "import",
-    "script",
-    "onload",
-    "onclick",
-    "onerror",
-    "script",
-    "iframe",
-    "object",
-    "embed",
-    "eval",
-    "document.write",
-    "setTimeout",
-    "javascript:",
-    "alert(",
-    "confirm(",
-    "SELECT",
-    "DELETE",
-    "UPDATE",
-    "DROP",
-    "../",
-    "file://",
-  ];
 
   constructor(private dataService: DataService,
               private http: HttpService) {}
 
   submitFeedback(form: NgForm) {
-    const feedback = form.value.feedback;
-    for (let i = 0; i < this.dangerousKeywords.length; i++) {
-      if (feedback.lowerCase().includes(this.dangerousKeywords[i].toLowerCase())) {
-        this.handleFeedback()
-      } else {
-        this.http.createFeedback(feedback).subscribe()
-        this.handleFeedback()
-      }
-    }
-    form.value.feedback = ''
+    this.http.createFeedback(form.value.feedback).subscribe();
+    this.handleFeedback()
   }
 
   handleFeedback() {
     this.dataService.message.next('Thank you for your feedback');
-    this.dataService.routerService.next(['user-dash']);
+    this.dataService.routerService.next(['user']);
   }
 }

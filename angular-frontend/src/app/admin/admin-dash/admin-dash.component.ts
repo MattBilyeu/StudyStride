@@ -57,11 +57,10 @@ export class AdminDashComponent implements OnInit {
   emailAllUsers(form: NgForm) {
     const conf = confirm('Are you sure you want to email all users?');
     if (conf) {
-      this.http.emailAllUsers(form.value.subject, form.value.text)
+      this.http.emailAllUsers(form.value.subject, form.value.message)
         .subscribe((response: Response)=> {
           this.dataService.message.next(response.message);
-          form.value.subject = '';
-          form.value.text = ''
+          form.reset();
         })
     }
   }

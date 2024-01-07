@@ -17,9 +17,10 @@ h1 {
     display: grid;
     grid-template-columns: auto auto;
     grid-template-areas:
-        "one four"
-        "two five"
-        "three six";
+        "one five"
+        "two six"
+        "three seven"
+        "four eight";
     gap: 1rem;
 }
 

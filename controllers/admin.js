@@ -131,7 +131,7 @@ exports.getAllAdmins = (req, res, next) => {
                 };
                 adminArray.push(adminObj);
             })
-            res.status(200).response({message: 'All admins provided.', allAdmins: adminArray})
+            res.status(200).json({message: 'All admins provided.', allAdmins: adminArray})
         })
         .catch(err => {
             console.log(err);

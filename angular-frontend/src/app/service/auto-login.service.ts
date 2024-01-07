@@ -27,4 +27,19 @@ export class AutoLoginService {
       return true
     }
   }
+
+  adminAutoLogin() {
+    let loginData = JSON.parse(localStorage.getItem('adminLoginData'));
+    if (!loginData || loginData === '') {
+      return false
+    } else {
+      this.http.adminLogin(loginData.email, loginData.password)
+        .subscribe((response: Response)=> {
+          this.dataService.role.next('admin');
+          this.dataService.loggedIn = true;
+          this.dataService.routerService.next(['admin-dash'])
+        });
+      return true
+    }
+  }
 }

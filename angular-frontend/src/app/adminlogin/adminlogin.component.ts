@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { DataService } from '../service/data.service';
 import { HttpService } from '../service/http.service';
 import { Response } from '../models/response.model';
+import { AutoLoginService } from '../service/auto-login.service';
 
 @Component({
   selector: 'app-adminlogin',
@@ -12,28 +13,17 @@ import { Response } from '../models/response.model';
 export class AdminloginComponent implements OnInit {
 
   constructor(private dataService: DataService,
-              private http: HttpService) {}
+              private http: HttpService,
+              private loginService: AutoLoginService) {}
 
   ngOnInit() {
-    let loginData = JSON.parse(localStorage.getItem('adminLoginData'));
-    if (!loginData || loginData === '') {
-      return false
-    } else {
-      this.http.adminLogin(loginData.email, loginData.password)
-        .subscribe((response: Response)=> {
-          this.dataService.user = response.user;
-          this.dataService.role.next('admin');
-          this.dataService.loggedIn = true;
-          this.dataService.routerService.next(['admin-dash'])
-        });
-      return true
-    }
+    this.loginService.adminAutoLogin()
   }
 
   login(form: NgForm) {
     this.http.adminLogin(form.value.email, form.value.password)
       .subscribe((response: Response) => {
-        if (!response.user) {
+        if (response.message === 'Login successful') {
           this.dataService.routerService.next(['admin-dash']);
           this.dataService.loggedIn = true;
           this.dataService.role.next('admin');

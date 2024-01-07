@@ -2,6 +2,8 @@ const mongoURI = require('./util/protected').mongoURI;
 const path = require('path');
 
 const Stats = require('./models/stats');
+const Admin = require('./models/admin');
+const bcrypt = require('bcrypt');
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -43,7 +45,24 @@ app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
 app.use('/badge', badgeRoutes);
 
-app.get('**', (req, res, next)=> {res.sendFile(path.join(__dirname, 'public', 'index.html'))});
+// app.get('**', (req, res, next)=> {res.sendFile(path.join(__dirname, 'public', 'index.html'))});
+
+Admin.findOne().then(admin => {
+    if (!admin) {
+        bcrypt.hash('TempPassword', 12)
+            .then(hashedPassword => {
+                const newAdmin = new Admin({
+                    name: 'Admin',
+                    email: 'admin@admin.com',
+                    password: hashedPassword,
+                });
+                newAdmin.save()
+            })
+            .catch(err => {
+                console.log(err)
+            }) 
+    }
+})
 
 Stats.findOne().then(stats => {
     if (!stats) {

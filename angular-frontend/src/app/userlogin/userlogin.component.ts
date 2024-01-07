@@ -15,10 +15,10 @@ export class UserloginComponent implements OnInit {
 
   constructor(private http: HttpService,
               private dataService: DataService,
-              private autoLogin: AutoLoginService) {}
+              private loginService: AutoLoginService) {}
 
   ngOnInit() {
-    this.autoLogin.autoLogin();
+    this.loginService.autoLogin();
   }
 
   // Uses form data to log in, if successful it will: 

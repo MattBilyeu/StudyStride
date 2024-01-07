@@ -4,9 +4,38 @@ const User = require('../models/user');
 
 const { sendOne } = require('../util/emailer');
 
+const dangerousKeywords = [
+    "import",
+    "script",
+    "onload",
+    "onclick",
+    "onerror",
+    "script",
+    "iframe",
+    "object",
+    "embed",
+    "eval",
+    "document.write",
+    "setTimeout",
+    "javascript:",
+    "alert(",
+    "confirm(",
+    "SELECT",
+    "DELETE",
+    "UPDATE",
+    "DROP",
+    "../",
+    "file://",
+  ];
+
 exports.createFeedback = (req, res, next) => {
     const text = req.body.text;
     const userId = req.session.userId;
+    for (let i = 0; i < dangerousKeywords.length; i++) {
+        if (text.toLowerCase().includes(dangerousKeywords[i].toLowerCase())) {
+            text = 'Invalid feedback submitted - original text dropped.'
+        }
+    };
     const newFeedback = new Feedback({
         text: text,
         userId: userId,
@@ -31,11 +60,7 @@ exports.createFeedback = (req, res, next) => {
 exports.deleteFeedback = (req, res, next) => {
    Feedback.findByIdAndDelete(req.body.feedbackId)
     .then(deleted => {
-        if (!deleted) {
-            return res.status(404).json({message: 'Feedback not found'})
-        } else {
-            return res.status(200).json({messsage: 'Feedback deleted.'})
-        }
+        return res.status(200).json({messsage: 'Feedback deleted.'})
     })
     .catch(err => {
         console.log(err);
@@ -70,7 +95,7 @@ exports.getFeedback = (req, res, next) => {
             if (feedbacks && feedbacks.length > 0) {
                 return res.status(200).json({feedbacks})
             } else {
-                return res.status(404).json({message: 'No feedback found.'})
+                return res.status(200).json({message: 'No feedback found.'})
             }
         })
         .catch(err => {

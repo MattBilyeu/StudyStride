@@ -20,6 +20,7 @@ export class AppStatsComponent implements OnInit {
 
   ngOnInit() {
     this.http.getStatsObject().subscribe((statsObj: Stats) => {
+      statsObj.totalStudyTime = Math.round(+statsObj.totalStudyTime*100)/100
       this.appObject = statsObj
     });
     this.http.getActiveUserCount().subscribe((counts: userCounts) => {

@@ -23,7 +23,7 @@ router.post('/startSession', userController.startSession);
 
 router.post('/endSession', userController.endSession);
 
-router.post('/submitFeedback', feedbackController.createFeedback);
+router.post('/createFeedback', feedbackController.createFeedback);
 
 router.post('/seedTime', userController.seedTime);
 
@@ -33,6 +33,6 @@ router.post('/delete', userController.deleteUser);
 
 router.post('/getStatsObject', userController.getStatsObject);
 
-router.post('/getActiveUsers', userController.getActiveUserCount);
+router.post('/getActiveUserCount', userController.getActiveUserCount);
 
 module.exports = router

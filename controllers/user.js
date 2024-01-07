@@ -8,9 +8,9 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 
 function formatDate(date) {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
+    const day = String(date.getMonth() + 1).padStart(2, '0');
+    const month = String(date.getDate()).padStart(2, '0');
+    const year = String(date.getFullYear()).slice(-2);
 
     return `${day}/${month}/${year}`;
 }
@@ -18,8 +18,8 @@ function formatDate(date) {
 function resolveMilestones(oldArray, newArray) {
     let newMilestones = 0;
     for (let i = 0; i < newArray.length; i++) {
-        const found = oldArray.find(item => item === newArray[i]);
-        if (found) {
+        const found = oldArray.findIndex(item => item.topic === newArray[i].topic);
+        if (found !== -1) {
             newMilestones += 1
         }
     };
@@ -27,7 +27,7 @@ function resolveMilestones(oldArray, newArray) {
         Stats.findOne()
             .then(stats => {
                 stats.milestonesCreated += newMilestones;
-                return stats.save()
+                stats.save()
             })
             .catch(err => {
                 console.log(err);
@@ -346,6 +346,8 @@ exports.endSession = (req, res, next) => {
                     user.topics[index].timestamps.push(timeStampObj);   //Saves the user's study session to their topic's timestamps array.
                 };
                 user.activeSession = null;
+                const activeUntil = startTime.getTime() + (1000 * 60 * 60 * 24 * 30);
+                user.userActiveUntil = new Date(activeUntil);
                 const wholeHoursStudied = Math.floor(user.totalTime/60);
                 if (wholeHoursStudied > ((user.badges.length + 1) * 10)) {   //Compares the total study time to the number of badges the user has earned to see if they have earned a new badge.
                     const newBadge = new Badge({    //The user earns a new badge ever 10 hours, so they are given a new badge if they have 10 hours more study time than 10*number of badges.
@@ -470,7 +472,7 @@ exports.deleteUser = (req, res, next) => {
 
 exports.getStatsObject = (req, res, next) => {
     Stats.findOne()
-        .then(statsObj => res.status(200).json({stats: statsObj}))
+        .then(statsObj => res.status(200).json(statsObj))
         .catch(err => {
             console.log(err);
             res.status(500).json({message: 'Internal server error.'})
@@ -480,9 +482,9 @@ exports.getStatsObject = (req, res, next) => {
 exports.getActiveUserCount = (req, res, next) => {
     User.find()
         .then(users => {
-            let currentDate = Date();
+            let currentDate = Date.now();
             const activeUsers = users.filter(user => {
-                user.userActiveUntil > currentDate
+                return user.userActiveUntil.getTime() > currentDate
             });
             return res.status(200).json({allUsers: users.length, activeUsers: activeUsers.length})
         })
@@ -494,6 +496,7 @@ exports.getActiveUserCount = (req, res, next) => {
 
 exports.renderBadge = (req, res, next) => {
     const badgeId = req.params.badgeId;
+    console.log(badgeId);
     Badge.findById(badgeId)
         .then(badge => {
             if (!badge) {
@@ -502,7 +505,8 @@ exports.renderBadge = (req, res, next) => {
             res.render('badge', {
                 ownerName: badge.ownerName,
                 text: badge.text,
-                dateEarned: badge.dateEarned
+                dateEarned: badge.dateEarned,
+                id: badge._id
             })
         })
         .catch(err => {

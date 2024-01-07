@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { DataService } from '../../../service/data.service';
 import { HttpService } from '../../../service/http.service';
 import { User } from '../../../models/user.model';
@@ -10,6 +10,7 @@ interface ActiveSession {
 }
 
 interface PastProgressObj {
+  last7HrsStudied: number;
   last30HrsStudied: number;
   last30HrsPerWeek: number;
   last30Badges: number;
@@ -23,7 +24,7 @@ interface PastProgressObj {
   templateUrl: './session.component.html',
   styleUrls: ['./session.component.css']
 })
-export class SessionComponent implements OnInit, OnDestroy, AfterViewInit {
+export class SessionComponent implements OnInit, AfterViewInit {
   @ViewChild('topic') topic!: ElementRef<HTMLSelectElement>;
   user: User;
   sessionRunning: boolean = false;
@@ -34,6 +35,7 @@ export class SessionComponent implements OnInit, OnDestroy, AfterViewInit {
   topics: string[] = [];
   intervalId: any;
   pastProgress: PastProgressObj = {
+    last7HrsStudied: 0,
     last30HrsStudied: 0,
     last30HrsPerWeek: 0,
     last30Badges: 0,
@@ -66,10 +68,27 @@ export class SessionComponent implements OnInit, OnDestroy, AfterViewInit {
     };
     if (this.user.topics.length > 0) {
       this.topics = this.user.topics.map(topicObj => topicObj.topic);
+      this.processLast7Studied(this.user);
       this.processAllTimeStats(this.user);
       this.processBadgeStats(this.user);
       this.processLast30Stats(this.user)
     }
+  }
+
+  processLast7Studied(user: User) {
+    const startDate = Date.now() - (1000 * 60 * 60 * 24 * 7);
+    let accumulatedMinutes = 0;
+    user.topics.forEach(topicObj => {
+      if (topicObj.timestamps.length > 0) {
+        for (let i = 0; i < topicObj.timestamps.length; i++) {
+          const stampDate = new Date(topicObj.timestamps[i].stamp)
+          if (stampDate.getTime() > startDate) {
+            accumulatedMinutes += +topicObj.timestamps[i].duration
+          }
+        }
+      }
+    });
+    this.pastProgress.last7HrsStudied = Math.round((accumulatedMinutes/60)*100)/100
   }
 
   processAllTimeStats(user: User) {
@@ -78,10 +97,10 @@ export class SessionComponent implements OnInit, OnDestroy, AfterViewInit {
         this.pastProgress.allTimeHrsStudied += +user.topics[i].timestamps[y].duration //Adds the timestamp's duration to the total hrs
       }
     }
-    this.pastProgress.allTimeHrsStudied = Math.round(this.pastProgress.allTimeHrsStudied*100)/100;
+    this.pastProgress.allTimeHrsStudied = Math.round((this.pastProgress.allTimeHrsStudied/60)*100)/100;
     const userCreated = new Date(user.createDate);
     let weeksElapsed = (Date.now() - userCreated.getTime())/(1000 * 60 * 60 * 24 * 7);
-    this.pastProgress.allTimeHrsPerWeek = Math.round(+((+this.pastProgress.allTimeHrsStudied/60)/weeksElapsed)*100)/100
+    this.pastProgress.allTimeHrsPerWeek = Math.round(+((+this.pastProgress.allTimeHrsStudied)/weeksElapsed)*100)/100
   }
 
   processBadgeStats(user: User) {
@@ -101,19 +120,25 @@ export class SessionComponent implements OnInit, OnDestroy, AfterViewInit {
   //then converts those minutes to hours for the last30Hrs and last30HrsPerWeek
   processLast30Stats(user: User) {
     const startDate = Date.now() - (1000 * 60 * 60 * 24 * 30);
+    let softStart = Date.now();
     let accumulatedMinutes = 0;
     user.topics.forEach(topicObj => {
       if (topicObj.timestamps.length > 0) {
         for (let i = 0; i < topicObj.timestamps.length; i++) {
           const stampDate = new Date(topicObj.timestamps[i].stamp)
-          if (stampDate.getTime() > startDate) {
+          if (stampDate.getTime() > startDate && stampDate.getTime() < softStart) {
+            softStart = stampDate.getTime();
+            accumulatedMinutes += +topicObj.timestamps[i].duration
+          } else if (stampDate.getTime() > startDate) {
+            softStart = startDate;
             accumulatedMinutes += +topicObj.timestamps[i].duration
           }
         }
       }
     });
+    const weeksElapsed = (Date.now() - softStart)/(1000 * 60 * 60 * 24 * 7);
     this.pastProgress.last30HrsStudied = Math.round(+Math.floor(accumulatedMinutes/60)*100)/100;
-    this.pastProgress.last30HrsPerWeek = Math.round((this.pastProgress.last30HrsStudied * (30/7))*100)/100;
+    this.pastProgress.last30HrsPerWeek = Math.round((this.pastProgress.last30HrsStudied/weeksElapsed)*100)/100;
     this.pastProgress.last30Badges = Math.floor(this.pastProgress.last30HrsStudied/10)
   }
 
@@ -198,12 +223,5 @@ export class SessionComponent implements OnInit, OnDestroy, AfterViewInit {
     this.pastProgress.last30HrsStudied = Number((this.pastProgress.allTimeHrsStudied/60).toFixed(2));
     this.pastProgress.last30HrsPerWeek = +this.pastProgress.last30HrsStudied/(30/7);
     this.pastProgress.last30Badges = Math.floor(this.pastProgress.last30HrsStudied/10)
-  }
-
-  ngOnDestroy() {
-    if (this.sessionRunning) {
-      this.dataService.message.next('Ending session...');
-      this.endSession();
-    }
   }
 }

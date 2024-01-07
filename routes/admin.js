@@ -14,7 +14,7 @@ router.post('/sendPassUpdate', adminController.sendAdminPassUpdate);
 
 router.post('/updatePassword', adminController.updateAdminPassword);
 
-router.post('/emailAll', adminController.emailAllUsers);
+router.post('/emailAllUsers', adminController.emailAllUsers);
 
 router.post('/getAllAdmins', adminController.getAllAdmins);
 

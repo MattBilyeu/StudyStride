@@ -3,13 +3,15 @@
     <div class="sessionContainer">
         <!-- Row 1 start -->
         <h3 class="one">Time Studied</h3>
-        <h3 class="two">Hours to Next Badge</h3>
-        <h3 class="three">Percent to Badge</h3>
+        <h3 class="two">Last 7 Days Hrs</h3>
+        <h3 class="three">Hours to Next Badge</h3>
+        <h3 class="four">Percent to Badge</h3>
         <!-- Row 1 End -->
         <!-- Row 2 Start -->
-        <h2 class="four">{{ sessionTimeStudied }}</h2>
-        <h2 class="five">{{ hoursToNextBadge }}</h2>
-        <h2 class="six">{{ percentToBadge }}%</h2>
+        <h2 class="five">{{ sessionTimeStudied }}</h2>
+        <h2 class="six">{{ pastProgress.last7HrsStudied }}</h2>
+        <h2 class="seven">{{ hoursToNextBadge }}</h2>
+        <h2 class="eight">{{ percentToBadge }}%</h2>
         <!-- Row 2 End -->
     </div>
     <p class="centered" *ngIf="topics.length === 0">Please create a topic in the topic-stats page in order to start a session.</p>

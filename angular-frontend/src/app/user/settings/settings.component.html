@@ -1,14 +1,14 @@
 <div class="secondary-background">
     <div class="componentContainer">
         <h1>User Settings</h1>
-        <form #e="ngForm" (ngSubmit)="updateEmail(e)">
+        <form class="email" #e="ngForm" (ngSubmit)="updateEmail(e)">
             <h2 class="one">Update Email</h2>
             <label class="two" for="email">New Email:</label>
             <input class="three" name="email" type="email">
             <label class="four" for="confirmEmail">Confirm Email:</label>
             <input class="five" name="confirmEmail" type="email">
-            <label for="password">Password:</label>
-            <input type="password" name="password" ngModel required>
+            <label class="passOne" for="password">Password:</label>
+            <input class="passTwo" type="password" name="password" ngModel required>
             <button class="six" type="submit" [disabled]="!e.valid">Submit</button>
         </form>
         <form #s="ngForm" (ngSubmit)="seedTime(s)">

@@ -41,6 +41,7 @@ button {
     border: none;
     min-width: 100px;
     font-weight: bold;
+    cursor: pointer
 }
 
 .complete {

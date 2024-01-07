@@ -29,6 +29,16 @@ form {
     gap: 1rem;
 }
 
+form.email {
+    grid-template-rows: repeat(5, auto);
+    grid-template-areas:
+    'one one'
+    'two three'
+    'four five'
+    'passOne passTwo'
+    'six six';
+}
+
 .one {
     grid-area: one
 }
@@ -53,6 +63,14 @@ form {
     grid-area: six;
     width: fit-content;
     margin: auto
+}
+
+.passOne {
+    grid-area: passOne
+}
+
+.passTwo {
+    grid-area: passTwo
 }
 
 .toggle {

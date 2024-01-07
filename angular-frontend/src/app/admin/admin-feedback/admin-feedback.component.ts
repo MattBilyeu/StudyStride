@@ -31,4 +31,8 @@ export class AdminFeedbackComponent implements OnInit{
       }
     })
   }
+
+  deleteFeedback(deletedId: string) {
+    this.feedbacks = this.feedbacks.filter(feedback => feedback._id !== deletedId)
+  }
 }

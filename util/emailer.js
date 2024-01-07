@@ -52,6 +52,4 @@ const sendOne = function(email, subject, body) {
     })
 }
 
-module.exports = {sendMany: sendMany};
-
-module.exports = {sendOne: sendOne};
+module.exports = {sendMany: sendMany, sendOne: sendOne};

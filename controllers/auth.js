@@ -54,7 +54,7 @@ exports.adminLogin = (req, res, next) => {
                             req.session._id = foundUser._id.toString();
                             req.session.role = 'admin';
                             foundUser.password = 'redacted';
-                            return res.status(200).json({message: 'login successful', user: foundUser})
+                            return res.status(200).json({message: 'Login successful'})
                         }
                     })
                     .catch(err => {
