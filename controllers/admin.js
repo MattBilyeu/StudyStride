@@ -39,7 +39,7 @@ exports.sendAdminPassUpdate = (req, res, next) => {
             if (!admin) {
                 return res.status(404).json({message: 'That email is not valid.'})
             } else {
-                foundAdmin = admin;
+                foundAdmin = admin; //This is to ensure that the admin object is accessable within the scope of the crypto method.
                 crypto.randomBytes(32, (err, buffer) => {
                     if (err) {
                         console.log(err);
@@ -81,20 +81,21 @@ exports.updateAdminPassword = (req, res, next) => {
             if (!user || user.resetExpiration < Date()) {
                 return res.status(404).json({message: 'Your token is invalid.'})
             } else {
-                foundUser = user;
+                foundUser = user; //This is to ensure that the user is accessible within the scope of the bcrypt method
+
                 return bcrypt.hash(password, 12)
-                .then(hashedPassword => {
-                    foundUser.password = hashedPassword;
-                    foundUser.save()
-                        .then(updatedUser => {
-                            updatedUser.password = 'redacted';
-                            return res.status(200).json({message: 'Password updated.', user: updatedUser})
-                        })
-                        .catch(err => {
-                            const error = new Error(err);
-                            error.status(500);
-                            next(error)
-                        })
+                    .then(hashedPassword => {
+                        foundUser.password = hashedPassword;
+                        foundUser.save()
+                            .then(updatedUser => {
+                                updatedUser.password = 'redacted';
+                                return res.status(200).json({message: 'Password updated.', user: updatedUser})
+                            })
+                            .catch(err => {
+                                const error = new Error(err);
+                                error.status(500);
+                                next(error)
+                            })
                 })
             }
         })
@@ -120,7 +121,7 @@ exports.emailAllUsers = (req, res, next) => {
         })
 }
 
-exports.getAllAdmins = (req, res, next) => {
+exports.getAllAdmins = (req, res, next) => { //This is used for the delete admin function on the admin dashboard.
     Admin.find()
         .then(admins => {
             const adminArray = [];

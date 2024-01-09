@@ -88,7 +88,7 @@ export class TopicStatsDetailComponent implements OnInit {
     this.pastProgress.last30HrsStudied = Math.round((this.pastProgress.last30HrsStudied/60)*100)/100
   }
 
-  deleteTopic(form: NgForm) {
+  deleteTopic(form: NgForm) { //Confirms with the user that they want to delete the topic and the merge topic they have chosen before processing.  
     if (form.value.mergeTopic === this.targetObj.topic) {
       return alert('You cannot marge a topic with itself.')
     };

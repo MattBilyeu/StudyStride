@@ -17,8 +17,8 @@ function formatDate(date) {
 
 function resolveMilestones(oldArray, newArray) {
     let newMilestones = 0;
-    for (let i = 0; i < newArray.length; i++) {
-        const found = oldArray.findIndex(item => item.topic === newArray[i].topic);
+    for (let i = 0; i < newArray.length; i++) { //Finds out if any new topics have been added.  This is so that the total milestones created app stat can be updated when users log new milestones.
+        const found = oldArray.findIndex(item => item.topic === newArray[i].topic); //Checks each topic in the new array to see if it exists in the old array.  If it doesn't, then the milestones is iterated.
         if (found !== -1) {
             newMilestones += 1
         }
@@ -38,7 +38,7 @@ function resolveMilestones(oldArray, newArray) {
 
 exports.createUser = (req, res, next) => {
     const name = req.body.name;
-    const email = req.body.email.toLowerCase();
+    const email = req.body.email.toLowerCase(); //Done to ensure emails are case insensitive.  Login attempts also do this to whatever email is entered.
     const password = req.body.password;
     User.findOne({email: email})
         .then(user => {
@@ -90,7 +90,7 @@ exports.updateEmail = (req, res, next) => {
     User.findOne({email: oldEmail})
         .then(user => {
             if (!user || user._id.toString() !== req.session.userId.toString()) {
-                return res.status(422).json({message: 'The reset email you used is no longer valid, please submit a new request.'})
+                return res.status(422).json({message: 'Your email update attempt has failed, please try again.'})
             } else {
                 foundUser = user;
                 bcrypt.compare(password, user.password)
@@ -174,7 +174,8 @@ exports.updatePassword = (req, res, next) => {
     let foundUser;
     User.findOne({resetToken: token})
         .then(user => {
-            if (!user || user.resetTokenExpiration < Date()) {
+            const tokenExpiration = new Date(user.resetTokenExpiration);
+            if (!user || tokenExpiration.getTime() < Date.now()) { //Checks if the token is not found or if it is expired, does not update password if it is.
                 return res.status(404).json({message: 'Your token is invalid.'})
             } else {
                 foundUser = user;
@@ -232,7 +233,7 @@ exports.createTopic = (req, res, next) => {
             if (!user) {
                 return res.status(404).json({message: 'User not found.'})
             } else {
-                const foundTopic = user.topics.findIndex(topicObj => topicObj.topic === req.body.title);
+                const foundTopic = user.topics.findIndex(topicObj => topicObj.topic === req.body.title); //Does not allow the same topic to be added twice
                 if (foundTopic !== -1) {
                     return res.status(422).json({message: 'A topic by that name already exists.'})
                 }
@@ -268,7 +269,7 @@ exports.deleteTopic = (req, res, next) => {
                     const topicIndex = user.topics.findIndex(topicObj => topicObj.topic);
                     user.topics[mergeIndex].timestamps = user.topics[mergeIndex].timestamps.concat(user.topics[topicIndex].timestamps)
                 };
-                user.topics = user.topics.filter(topicObj => topicObj.topic !== topic);
+                user.topics = user.topics.filter(topicObj => topicObj.topic !== topic); //Filters out the topic to be deleted, then saves the user with the updated topics array.
                 user.save()
                     .then(updatedUser => {
                         return res.status(200).json({message: 'Topic deleted.', user: updatedUser})
@@ -297,8 +298,8 @@ exports.startSession = (req, res, next) => {
                 return res.status(422).json({messsage: 'A session is already active.'})
             } else {
                 user.activeSession = activeSession;
-                const currentDate = Date();
-                user.userActiveUntil = currentDate + (30 * 24 * 60 * 60 * 1000);
+                const currentDate = new Date();
+                user.userActiveUntil = currentDate.getTime() + (30 * 24 * 60 * 60 * 1000); //Updates the user's active until date to 30 days from now - this is for app stats so admins can see how many users are active
                 user.save()
                     .then(updatedUser => {
                         res.status(201).json({message: 'Session started.', user: updatedUser})
@@ -358,6 +359,15 @@ exports.endSession = (req, res, next) => {
                     });
                     newBadge.save()
                         .then(badge => {
+                            if (user.receivesEmails) {
+                                const emailBody = `
+                                <h1>Contratulations ${user.name}!</h1>  
+                                <p>You've earned a new Study Streak Badge!<p>
+                                <br>
+                                <p>You can view your new badge <a href="study-stride.com/badge/${badge._id}"><strong>HERE.</strong></a></p>
+                            `
+                            sendOne(user.email, `You've earned a Study Streak Badge from Study Stride!`, emailBody);
+                            }
                             user.badges.push(badge._id);
                             user.save()
                                 .then(updatedUser => {
@@ -385,7 +395,7 @@ exports.endSession = (req, res, next) => {
                 };
                 Stats.findOne()
                     .then(stats => {
-                        stats.totalStudyTime += dur;
+                        stats.totalStudyTime += (dur/60);
                         stats.save()
                     })
                     .catch(err => {
@@ -400,7 +410,7 @@ exports.endSession = (req, res, next) => {
         })
 }
 
-exports.seedTime = (req, res, next) => {
+exports.seedTime = (req, res, next) => { //Used to create the result of ending a session but with the desired number of minutes.  It is meant to allow negative numbers.
     const seedTime = req.body.seedTime;
     const seedTopic = req.body.seedTopic;
     User.findById(req.session.userId)
@@ -414,6 +424,7 @@ exports.seedTime = (req, res, next) => {
                 } else {
                     const timestamp = {stamp: new Date(), duration: seedTime};
                     user.topics[index].timestamps.push(timestamp);
+                    user.totalTime += seedTime;
                     user.save()
                         .then(updatedUser => {
                             return res.status(200).json({message: 'Time seeded.', user: updatedUser})
@@ -502,7 +513,7 @@ exports.renderBadge = (req, res, next) => {
             if (!badge) {
                 return res.render('error')
             };
-            res.render('badge', {
+            res.render('badge', { //This uses the badge ID to render a badge page with EJS.  I used EJS here instead of an angular component so I could easily bind unique descriptions for the sake of social sharing.
                 ownerName: badge.ownerName,
                 text: badge.text,
                 dateEarned: badge.dateEarned,

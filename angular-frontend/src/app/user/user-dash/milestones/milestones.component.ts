@@ -51,10 +51,14 @@ export class MilestonesComponent implements OnInit {
   }
 
   deleteCompletedMilestone(index: number) {
-    this.activeMilestones.splice(index, 1)
+    this.completedMilestones.splice(index, 1)
   }
 
-  saveMilestones() {
+  //This component updates the array within the frontend and only updates the user's milestones in the database if they hit save.  
+  //The point of this is to save on server processing - users may make multiple changes when updating their milestones and I didn't 
+  //want to have to process a new server request for each change.  Users should update their milestones infrequently enough that
+  //I don't anticipate user frustrations with having to hit "save"
+  saveMilestones() { 
     const newMilestones = this.activeMilestones.concat(this.completedMilestones);
     this.http.updateMilestones(newMilestones).subscribe((response: Response) => {
       this.dataService.message.next(response.message);

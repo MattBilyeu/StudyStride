@@ -7,13 +7,13 @@ exports.userLogin = (req, res, next) => {
     const email = req.body.email.toLowerCase();
     const password = req.body.password;
     let foundUser;
-    User.findOne({email: email})
+    User.findOne({email: email}) //Finds user by email
         .then(user => {
             if (!user) {
                 return res.status(404).json({message: 'User not found'})
             } else {
                 foundUser = user;
-                bcrypt.compare(password, user.password)
+                bcrypt.compare(password, user.password) //Compares the submitted password with the encrypted one in the database
                     .then(domatch => {
                         if (!domatch) {
                             return res.status(422).json({message: 'Password and Email Combination Not Found'})
@@ -40,13 +40,13 @@ exports.adminLogin = (req, res, next) => {
     const email = req.body.email.toLowerCase();
     const password = req.body.password;
     let foundUser;
-    Admin.findOne({email: email})
+    Admin.findOne({email: email})//Finds user by email
         .then(user => {
             if (!user) {
                 return res.status(404).json({message: 'User not found'})
             } else {
                 foundUser = user;
-                bcrypt.compare(password, user.password)
+                bcrypt.compare(password, user.password)//Compares the submitted password with the encrypted one in the database
                     .then(domatch => {
                         if (!domatch) {
                             return res.status(422).json({message: 'Password and Email Combination Not Found'})

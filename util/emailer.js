@@ -13,7 +13,7 @@ const sendMany = function(arr, subject, body) {
     });
 
     const info = {
-        from: 'no-reply@efficient-comms.com',
+        from: 'no-reply@study-stride.com',
         to: 'will be reset',
         subject: subject,
         html: body
@@ -39,7 +39,7 @@ const sendOne = function(email, subject, body) {
     });
 
     const info = {
-        from: 'no-reply@studystride.com',
+        from: 'no-reply@study-stride.com',
         to: email,
         subject: subject,
         html: body

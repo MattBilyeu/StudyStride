@@ -10,3 +10,16 @@
 img {
     width: 200px;
 }
+
+.demoVideo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: fit-content;
+    margin: auto auto 3rem auto
+}
+
+.demoVideo video {
+    max-width: 600px;
+    border: solid thick var(--primary-color)
+}

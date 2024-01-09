@@ -86,11 +86,11 @@ export class SessionComponent implements OnInit, AfterViewInit {
   }
 
   processLast7Studied(user: User) {
-    const startDate = Date.now() - (1000 * 60 * 60 * 24 * 7);
+    const startDate = Date.now() - (1000 * 60 * 60 * 24 * 7); //Sets the start date to 7 days ago
     let accumulatedMinutes = 0;
     user.topics.forEach(topicObj => {
       if (topicObj.timestamps.length > 0) {
-        for (let i = 0; i < topicObj.timestamps.length; i++) {
+        for (let i = 0; i < topicObj.timestamps.length; i++) { //Iterates through each timestamp of each topic, adds its duration only if its timestamp is later than the start date
           const stampDate = new Date(topicObj.timestamps[i].stamp)
           if (stampDate.getTime() > startDate) {
             accumulatedMinutes += +topicObj.timestamps[i].duration
@@ -162,13 +162,13 @@ export class SessionComponent implements OnInit, AfterViewInit {
     const sessionStart = new Date(session.start);
     let currentDuration = now.getTime() - sessionStart.getTime();
     currentDuration = Math.floor(currentDuration / (60 * 1000));
-    if (currentDuration < 60) {
+    if (currentDuration < 1) {
+      this.sessionTimeStudied = `0 mins`
+    } else if (currentDuration < 60) {
       this.sessionTimeStudied = `${currentDuration} mins`
     } else {
-      let hours;
-      let minutes;
-      hours = Math.floor(currentDuration/60);
-      minutes = Math.floor((currentDuration % 60));
+      let hours = Math.floor(currentDuration/60);
+      let minutes = Math.floor((currentDuration % 60));
       this.sessionTimeStudied = `${hours} hrs ${minutes} mins`;
     }
     this.intervalId = setInterval(()=> {

@@ -124,6 +124,8 @@ h3, h2 {
     width: 60px;
     background-color: var(--secondary-background);
     border: thin solid var(--primary-color);
+    border-radius: 30px;
+    padding: 1rem
 }
 
 .badgeLink a {
@@ -137,6 +139,6 @@ h3, h2 {
 
 .badgeLink a p {
     margin-top: 0;
-    font-size: x-small;
+    font-size: small;
     text-align: center
 }

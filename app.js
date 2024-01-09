@@ -47,7 +47,7 @@ app.use('/badge', badgeRoutes);
 
 app.get('**', (req, res, next)=> {res.sendFile(path.join(__dirname, 'public', 'index.html'))});
 
-Admin.findOne().then(admin => {
+Admin.findOne().then(admin => { //Checks if there is an admin.  If there isn't then it creates one.  This is to ensure that one can never delete the last admin.
     if (!admin) {
         bcrypt.hash('TempPassword', 12)
             .then(hashedPassword => {
@@ -64,7 +64,7 @@ Admin.findOne().then(admin => {
     }
 })
 
-Stats.findOne().then(stats => {
+Stats.findOne().then(stats => { //Ensures that the stats object exists.  This is for use on the admin side to access app statistics.
     if (!stats) {
         const statsObj = new Stats({
             totalTimeStamps: 0,
@@ -77,7 +77,6 @@ Stats.findOne().then(stats => {
 
 mongoose.connect(mongoURI)
     .then(()=> {
-        console.log('Connected, listening on port 3000');
-        app.listen(3000);
+        app.listen(process.env.PORT || 3000);
     })
     .catch(err => console.log('MongoDB Connection Error: ', err));

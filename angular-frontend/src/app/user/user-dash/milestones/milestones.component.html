@@ -11,7 +11,7 @@
             <h1>Completed Milestones</h1>
             <ol>
                 <li class="smallText"><span>Milestone</span><span class="centered">Delete</span></li>
-                <li *ngFor="let milestone of completedMilestones; let i = index"><span>{{ milestone.name }}</span><button (click)="deleteActiveMilestone(i)" class="delete">X</button></li>
+                <li *ngFor="let milestone of completedMilestones; let i = index"><span>{{ milestone.name }}</span><button (click)="deleteCompletedMilestone(i)" class="delete">X</button></li>
             </ol>
         </div>
     </div>

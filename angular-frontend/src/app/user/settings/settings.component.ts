@@ -43,7 +43,7 @@ export class SettingsComponent implements OnInit {
 
   seedTime(form: NgForm) {
     let conf = true;
-    if (form.value.seedTime > 180) {
+    if (form.value.seedTime > 180) { //Confirms with the user before processing a large seeded timestamp (greater than 3hrs).  This should be larger than any normal session.  This warning is because of the way per week sessions are calculated.  If they add 500hrs all at once, for example, then their hrs/week will be absurdly high.
       let hours = Math.round((form.value.seedTime/60)*100)/100;
       conf = confirm(`Are you sure you want to seed ${hours} hrs?  Seeding excessive time can permanently throw off your statistics.  Seeding is meant for minor adjustments (such as forgetting to start or stop the clock).`)
     };
