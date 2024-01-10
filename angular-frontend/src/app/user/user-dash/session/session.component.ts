@@ -147,7 +147,7 @@ export class SessionComponent implements OnInit, AfterViewInit {
       }
     });
     const weeksElapsed = (Date.now() - softStart)/(1000 * 60 * 60 * 24 * 7);
-    this.pastProgress.last30HrsStudied = Math.round(+Math.floor(accumulatedMinutes/60)*100)/100;
+    this.pastProgress.last30HrsStudied = Math.round((accumulatedMinutes/60)*100)/100;
     this.pastProgress.last30HrsPerWeek = Math.round((this.pastProgress.last30HrsStudied/weeksElapsed)*100)/100;
     this.pastProgress.last30Badges = Math.floor(this.pastProgress.last30HrsStudied/10)
   }
@@ -216,22 +216,5 @@ export class SessionComponent implements OnInit, AfterViewInit {
         this.initializeComponent();
       }
     })
-  }
-
-  //Iterates through each timestamp from each topic; if the timestamp occurred in the last 30 days it adds the stamps duration to the property for the last 30 days hours studied
-  //Sets the last 30 hours per week and last 30 badges based off of the above.
-  loadLast30Progress() {
-    for (let i = 0; i < this.user.topics.length; i++) {
-      let topic = this.user.topics[i];
-      for (let i = 0; i < topic.timestamps.length; i++) {
-        let pastStartLine = Date.now() - (1000 * 60 * 60 * 24 * 30);
-        if (topic.timestamps[i].stamp.getTime() > pastStartLine) {
-          this.pastProgress.last30HrsStudied = +this.pastProgress.last30HrsStudied + +topic.timestamps[i].duration
-        }
-      }
-    };
-    this.pastProgress.last30HrsStudied = Number((this.pastProgress.allTimeHrsStudied/60).toFixed(2));
-    this.pastProgress.last30HrsPerWeek = +this.pastProgress.last30HrsStudied/(30/7);
-    this.pastProgress.last30Badges = Math.floor(this.pastProgress.last30HrsStudied/10)
   }
 }
