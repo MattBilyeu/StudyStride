@@ -42,9 +42,8 @@ export class UserloginComponent implements OnInit {
         localStorage.setItem('loginData', JSON.stringify(loginData));
         this.dataService.role.next('user');
         this.dataService.routerService.next(['user'])
-      }, (error: HttpErrorResponse) => {
-        console.log(error);
-        this.dataService.message.next(error.error.message);
+      }, (errorResponse: HttpErrorResponse) => {
+        this.dataService.message.next(errorResponse.error.message);
       })
   }
 

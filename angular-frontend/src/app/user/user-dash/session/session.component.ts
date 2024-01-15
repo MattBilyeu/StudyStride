@@ -3,6 +3,7 @@ import { DataService } from '../../../service/data.service';
 import { HttpService } from '../../../service/http.service';
 import { User } from '../../../models/user.model';
 import { Response } from '../../../models/response.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface ActiveSession {
   topic: string;
@@ -196,6 +197,8 @@ export class SessionComponent implements OnInit, AfterViewInit {
           this.dataService.user = response.user;
           this.initializeComponent();
         }
+      }, (errorResponse: HttpErrorResponse) => {
+        this.dataService.message.next(errorResponse.error.message);
       })
     } else {
       alert('Please select a topic.')
@@ -215,6 +218,8 @@ export class SessionComponent implements OnInit, AfterViewInit {
         clearInterval(this.intervalId);
         this.initializeComponent();
       }
+    }, (errorResponse: HttpErrorResponse) => {
+      this.dataService.message.next(errorResponse.error.message);
     })
   }
 }

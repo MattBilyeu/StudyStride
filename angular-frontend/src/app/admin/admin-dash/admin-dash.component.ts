@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { DataService } from '../../service/data.service';
 import { HttpService } from '../../service/http.service';
 import { Response } from '../../models/response.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface adminInfo {
   name: string;
@@ -45,12 +46,16 @@ export class AdminDashComponent implements OnInit {
         form.value.name = '';
         form.value.email = '';
         form.value.password = ''
+      }, (errorResponse: HttpErrorResponse) => {
+        this.dataService.message.next(errorResponse.error.message);
       })
   }
 
   deleteAdmin(form: NgForm) {
     this.http.deleteAdmin(form.value.adminId).subscribe((response: Response) => {
       this.dataService.message.next(response.message)
+    }, (errorResponse: HttpErrorResponse) => {
+      this.dataService.message.next(errorResponse.error.message);
     })
   }
 
@@ -61,6 +66,8 @@ export class AdminDashComponent implements OnInit {
         .subscribe((response: Response)=> {
           this.dataService.message.next(response.message);
           form.reset();
+        }, (errorResponse: HttpErrorResponse) => {
+          this.dataService.message.next(errorResponse.error.message);
         })
     }
   }

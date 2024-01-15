@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { DataService } from '../../../service/data.service';
 import { HttpService } from '../../../service/http.service';
 import { Response } from '../../../models/response.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface Timestamp {
   stamp: Date;
@@ -32,6 +33,7 @@ export class TopicStatsDetailComponent implements OnInit {
   @Input() topic: string;
   targetObj: TopicObj;
   topics: string[] = [];
+  last7Total: number = 0;
   pastProgress: PastProgressObj = {
     last30HrsStudied: 0,
     last30HrsPerWeek: 0,
@@ -46,9 +48,21 @@ export class TopicStatsDetailComponent implements OnInit {
     this.targetObj = this.dataService.user.topics.filter(topicObj => topicObj.topic === this.topic)[0]; //Sets the topic for this component.
     this.dataService.user.topics.forEach(topicObj => this.topics.push(topicObj.topic)); //Populates all of the topic names the user has (used for the merge topics function)
     if (this.targetObj.timestamps.length > 0) {
+      this.processLast7Total();
       this.processAllTimeStats();
       this.processLast30Stats()
     }
+  }
+
+  processLast7Total() {
+    const start = Date.now() - (1000 * 60 * 60 * 24 * 7);
+    for (let i = 0; i < this.targetObj.timestamps.length; i++) {
+      const stampTime = new Date(this.targetObj.timestamps[i].stamp);
+      if (stampTime.getTime() > start) {
+        this.last7Total += +this.targetObj.timestamps[i].duration;
+      }
+    };
+    this.last7Total = Math.round((this.last7Total/60)*100)/100
   }
 
   processAllTimeStats() {
@@ -106,6 +120,8 @@ export class TopicStatsDetailComponent implements OnInit {
             this.dataService.user = response.user;
             this.updated.emit(true)
           }
+        }, (errorResponse: HttpErrorResponse) => {
+          this.dataService.message.next(errorResponse.error.message);
         })
     }
   }

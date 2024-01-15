@@ -45,6 +45,8 @@ app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
 app.use('/badge', badgeRoutes);
 
+app.get('/landing', (req, res, next)=> {res.sendFile(path.join(__dirname, 'public', 'landing.html'))});
+
 app.get('**', (req, res, next)=> {res.sendFile(path.join(__dirname, 'public', 'index.html'))});
 
 Admin.findOne().then(admin => { //Checks if there is an admin.  If there isn't then it creates one.  This is to ensure that one can never delete the last admin.

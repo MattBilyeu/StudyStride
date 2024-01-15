@@ -3,6 +3,7 @@ import { DataService } from '../../../service/data.service';
 import { HttpService } from '../../../service/http.service';
 import { Response } from '../../../models/response.model';
 import { NgForm } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface Milestone {
   name: string;
@@ -68,6 +69,8 @@ export class MilestonesComponent implements OnInit {
         this.completedMilestones = [];
         this.initializeComponent()
       }
+    }, (errorResponse: HttpErrorResponse) => {
+      this.dataService.message.next(errorResponse.error.message);
     })
   }
 }

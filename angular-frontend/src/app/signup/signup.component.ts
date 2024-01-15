@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { HttpService } from '../service/http.service';
 import { DataService } from '../service/data.service';
 import { Response } from '../models/response.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-signup',
@@ -23,6 +24,8 @@ export class SignupComponent {
             this.dataService.user = response.user;
             this.dataService.routerService.next([''])
           }
+        }, (errorResponse: HttpErrorResponse) => {
+          this.dataService.message.next(errorResponse.error.message);
         })
     }
   }

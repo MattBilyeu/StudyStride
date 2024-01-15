@@ -5,6 +5,7 @@ import { DataService } from '../../../service/data.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HttpService } from '../../../service/http.service';
 import { Response } from '../../../models/response.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-feedback-detail',
@@ -39,6 +40,8 @@ export class FeedbackDetailComponent implements OnInit {
       this.dataService.message.next(response.message);
       form.value.message = '';
       this.viewEditor = false
+    }, (errorResponse: HttpErrorResponse) => {
+      this.dataService.message.next(errorResponse.error.message);
     })
   }
 
@@ -50,6 +53,8 @@ export class FeedbackDetailComponent implements OnInit {
     this.http.deleteFeedback(this.feedback._id).subscribe((response: Response) => {
       this.dataService.message.next(response.message);
       this.deleted.emit(true)
+    }, (errorResponse: HttpErrorResponse) => {
+      this.dataService.message.next(errorResponse.error.message);
     })
   }
 }

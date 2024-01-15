@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { DataService } from '../../service/data.service';
 import { HttpService } from '../../service/http.service';
 import { Response } from '../../models/response.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-settings',
@@ -38,6 +39,8 @@ export class SettingsComponent implements OnInit {
           this.dataService.user = response.user;
           this.userEmail = response.user.email;
         }
+      }, (errorResponse: HttpErrorResponse) => {
+        this.dataService.message.next(errorResponse.error.message);
       })
   }
 
@@ -54,6 +57,8 @@ export class SettingsComponent implements OnInit {
         if (response.user) {
           this.dataService.user = response.user
         }
+      }, (errorResponse: HttpErrorResponse) => {
+        this.dataService.message.next(errorResponse.error.message);
       })
     }
   }
@@ -69,6 +74,8 @@ export class SettingsComponent implements OnInit {
           this.receivesEmailsMess = 'Turn OFF emails:'
         }
       }
+    }, (errorResponse: HttpErrorResponse) => {
+      this.dataService.message.next(errorResponse.error.message);
     })
   }
 
@@ -85,6 +92,8 @@ export class SettingsComponent implements OnInit {
             localStorage.removeItem('loginData');
             this.dataService.routerService.next([''])
           }
+        }, (errorResponse: HttpErrorResponse) => {
+          this.dataService.message.next(errorResponse.error.message);
         })
     }
   }

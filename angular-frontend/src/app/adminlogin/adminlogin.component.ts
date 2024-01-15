@@ -4,6 +4,7 @@ import { DataService } from '../service/data.service';
 import { HttpService } from '../service/http.service';
 import { Response } from '../models/response.model';
 import { AutoLoginService } from '../service/auto-login.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-adminlogin',
@@ -32,6 +33,8 @@ export class AdminloginComponent implements OnInit {
         } else {
           this.dataService.message.next('Login failed.')
         }
+      }, (errorResponse: HttpErrorResponse) => {
+        this.dataService.message.next(errorResponse.error.message);
       })
   }
 

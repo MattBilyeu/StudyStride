@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { DataService } from '../../service/data.service';
 import { HttpService } from '../../service/http.service';
 import { Response } from '../../models/response.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface Timestamp {
   stamp: Date;
@@ -43,6 +44,8 @@ export class TopicStatsComponent implements OnInit {
         form.value.newTopic = '';
         this.initializeComponent()
       }
+    }, (errorResponse: HttpErrorResponse) => {
+      this.dataService.message.next(errorResponse.error.message);
     })
   }
 }

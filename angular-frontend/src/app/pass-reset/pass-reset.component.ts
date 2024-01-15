@@ -5,6 +5,7 @@ import { DataService } from '../service/data.service';
 import { Subscription } from 'rxjs';
 import { HttpService } from '../service/http.service';
 import { Response } from '../models/response.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-pass-reset',
@@ -41,6 +42,8 @@ export class PassResetComponent implements OnInit, OnDestroy {
           this.dataService.user = response.user;
           this.dataService.routerService.next([''])
         }
+      }, (errorResponse: HttpErrorResponse) => {
+        this.dataService.message.next(errorResponse.error.message);
       })
     }
   }
@@ -48,6 +51,8 @@ export class PassResetComponent implements OnInit, OnDestroy {
   sendReset(form: NgForm) {
     this.http.sendPassUpdate(form.value.email).subscribe((response: Response) => {
       this.dataService.message.next(response.message)
+    }, (errorResponse: HttpErrorResponse) => {
+      this.dataService.message.next(errorResponse.error.message);
     })
   }
 
