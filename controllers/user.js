@@ -266,7 +266,7 @@ exports.deleteTopic = (req, res, next) => {
                 if (req.body.mergeTopic !== 'None') { //If the user has selected a merge topic, push all timestamps from the topic to be deleted into the merge topic.
                     const mergeTopic = req.body.mergeTopic;
                     const mergeIndex = user.topics.findIndex(topicObj => topicObj.topic === mergeTopic);
-                    const topicIndex = user.topics.findIndex(topicObj => topicObj.topic);
+                    const topicIndex = user.topics.findIndex(topicObj => topicObj.topic === topic);
                     user.topics[mergeIndex].timestamps = user.topics[mergeIndex].timestamps.concat(user.topics[topicIndex].timestamps)
                 };
                 user.topics = user.topics.filter(topicObj => topicObj.topic !== topic); //Filters out the topic to be deleted, then saves the user with the updated topics array.
